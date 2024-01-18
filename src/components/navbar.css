@@ -1,0 +1,24 @@
+.logo {
+  margin-left: -15%;
+}
+
+.logo-text {
+  color: #0c1d56;
+}
+
+@media only screen and (max-width: 600px) {
+  .logo {
+    margin-left: 0%;
+  }
+}
+
+.wrapper-class {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+@media only screen and (min-width: 972px) {
+  .wrapper-class {
+    width: 115%;
+  }
+}
