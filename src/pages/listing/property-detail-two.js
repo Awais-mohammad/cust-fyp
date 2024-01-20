@@ -16,6 +16,7 @@ import '../../../node_modules/tiny-slider/dist/tiny-slider.css';
 import Footer from "../../components/footer";
 
 export default function PropertyDetailsTwo(){
+
     const images = [image1, image2, image3, image4, image5]
     const settings = {
         container: '.tiny-one-item',
