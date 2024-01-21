@@ -18,10 +18,10 @@ import { db } from "../../config";
 
 export default function PropertyDetails() {
     const [property, setProperty] = useState({});
+    const [isForSale, setIsForSale] = useState(true);
 
     const params = useParams()
     const id = params.id;
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -52,10 +52,16 @@ export default function PropertyDetails() {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     };
 
+    const handleSale = () => {
+        isForSale ? setIsForSale(false) : setIsForSale(true)
+    }
+
     const handleImageClick = (index) => {
         setCurrentImageIndex(index);
         setIsOpen(true);
     };
+
+
 
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = property?.description;
@@ -134,6 +140,18 @@ export default function PropertyDetails() {
                                 </ul>
 
                                 <p className="text-muted">{description ? description : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt"}</p>
+                                <div className="mb-3">
+                                    <label className="form-label text-muted">
+                                        Feedback 
+                                    </label>
+                                    <textarea
+                                        name="comments"
+                                        id="comments"
+                                        rows="4"
+                                        className="form-control text-muted"
+                                        placeholder="Give Feedback"
+                                    ></textarea>
+                                </div>
                                 <div className="card map border-0">
                                     <div className="card-body p-0">
                                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin" className="rounded-3" style={{ border: '0' }} title="Townter" allowFullScreen></iframe>
@@ -148,7 +166,7 @@ export default function PropertyDetails() {
 
                                 <div className="d-flex align-items-center justify-content-between">
                                     <h5 className="mb-0">{property?.soldPrice ? property?.soldPrice : "14745"}</h5>
-                                    <span className="badge bg-primary">For Sale</span>
+                                    <button onClick={handleSale} className="badge bg-primary">{isForSale ? "For Sale" : "Sold"}</button>
                                 </div>
 
                                 <div className="">
