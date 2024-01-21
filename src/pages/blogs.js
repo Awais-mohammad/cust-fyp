@@ -14,7 +14,7 @@ import {
 import Spinner from "../common/loading-spinner";
 import RoutesEnums from "../enums/routes.enums";
 import "../App.css";
-import { FiCamera, FiDelete, FiHeart} from "react-icons/fi";
+import { FiArrowDownRight, FiCamera, FiDelete, FiHeart } from "react-icons/fi";
 import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
@@ -25,6 +25,8 @@ export default function Blogs() {
   const [currentPageData, setCurrentPageData] = useState([]);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
+  const [inputModal, setInputModal] = useState(false);
+
 
   let navigate = useNavigate();
 
@@ -230,7 +232,7 @@ export default function Blogs() {
                           <p className="fw-medium mb-0">5000 PKR</p>
                         </li>
                       </ul>
-                      <div className="mt-4">
+                      <div className="mt-4 d-flex justify-content-between">
                         <Link
                           to={`/property-detail/${item.id}`}
                           className="text-dark read-more"
@@ -238,7 +240,28 @@ export default function Blogs() {
                           View Property0{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
+                        <button onClick={() => setInputModal(!inputModal)} className="badge bg-primary">Mark as Sold</button>
+                        <div
+                          className={`${inputModal === true ? "show" : ""
+                            } dropdown-menu dd-menu dropdown-menu-start bg-white rounded-3 border-0 mt-3 p-0 right-0`}
+                          style={{ width: "200px", right: "150px", bottom: "20px" }}
+                        >
+                          <div className="search-bar rounded-3 border bg-primary text-light">
+                            <div id="itemSold" className="mb-0 d-flex align-items-center">
+                              <input
+                                type="text"
+                                className="form-control border-0 bg-transparent"
+                                name="s"
+                                id="soldItem"
+                                placeholder="Sold Price"
+                              />
+                                <FiArrowDownRight />
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
+
 
                     </div>
                   </div>
