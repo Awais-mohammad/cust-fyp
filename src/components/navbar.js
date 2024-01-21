@@ -12,6 +12,11 @@ export default function Navbar({ navClass, logolight, menuClass }) {
   const [scroll, setScroll] = useState(false);
   const [isMenu, setisMenu] = useState(false);
   const [modal, setModal] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
+
+  const switchMode = () => {
+    isSeller? setIsSeller(false) : setIsSeller(true)
+  }
 
   const iconCheckLoggedIn = () => {
     return localStorage.getItem("accessToken") ? (
@@ -206,6 +211,17 @@ export default function Navbar({ navClass, logolight, menuClass }) {
 
           <div className="wrapper-class">
             <ul className="buy-button list-inline mb-0">
+              <li className="list-inline-item ps-1 mb-0">
+                <div className="dropdown">
+                  <button
+                    type="button"
+                    className="btn btn-pills btn-primary dropdown-toggle"
+                    onClick={switchMode}
+                  >
+                    {isSeller ? "Switch to buyer" : "Switch to seller"}
+                  </button>
+                </div>
+              </li>
               <li className="list-inline-item ps-1 mb-0">
                 <div className="dropdown">
                   <button

@@ -13,7 +13,7 @@ import { collection, addDoc } from "firebase/firestore";
 import {
   ref,
   uploadBytesResumable,
-  getDownloadURL 
+  getDownloadURL
 } from "firebase/storage";
 import Spinner from "../common/loading-spinner";
 import { toast } from "react-toastify";
@@ -21,116 +21,121 @@ import { toastUtil } from "../utils/toast.utils";
 import RoutesEnums from "../enums/routes.enums";
 
 export default function CreateBlog() {
-  let navigate = useNavigate ()
+  let navigate = useNavigate()
   const [formData, setFormData] = useState({
     tag: "",
     title: "",
-    description:"",
-    author:"",
+    description: "",
+    author: "",
     date: "",
     image: "",
   });
   const [percent, setPercent] = useState(0);
-  const [showPercentBar, setShowPercentBar]= useState(false)
+  const [showPercentBar, setShowPercentBar] = useState(false)
   const [loading, setLoading] = useState(false);
 
 
   const handleUpload = () => {
     setLoading(true)
     return new Promise((resolve, reject) => {
-        if (!formData.image) {
-            alert("Please choose a file first!");
-            reject("No file selected");
-            return;
+      if (!formData.image) {
+        alert("Please choose a file first!");
+        reject("No file selected");
+        return;
+      }
+
+      const storageRef = ref(storage, `/blogImages/${formData.imageName}`);
+      const uploadTask = uploadBytesResumable(storageRef, formData.image);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setShowPercentBar(true)
+          setPercent(percent);
+        },
+        (err) => {
+          console.error(err);
+          setLoading(false)
+          reject(err);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref)
+            .then((url) => {
+              console.log(url);
+              resolve(url);
+            })
+            .catch((err) => {
+              console.error(err);
+              reject(err);
+            });
         }
-
-        const storageRef = ref(storage, `/blogImages/${formData.imageName}`);
-        const uploadTask = uploadBytesResumable(storageRef, formData.image);
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const percent = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                );
-                setShowPercentBar(true)
-                setPercent(percent);
-            },
-            (err) => {
-                console.error(err);
-                setLoading(false)
-                reject(err);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref)
-                    .then((url) => {
-                        console.log(url);
-                        resolve(url);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        reject(err);
-                    });
-            }
-        );
+      );
     });
-};
-const [descVal, setDescVal] = useState("")
-const handleChange = (e) => {
-  const { name, value, files } = e?.target;
+  };
+  const [descVal, setDescVal] = useState("")
+  const handleChange = (e) => {
+    const { name, value, files } = e?.target;
 
-  if (name === "image" && files.length > 0) {
-    const imageName = files[0]?.name;
+    if (name === "image" && files.length > 0) {
+      const imageName = files[0]?.name;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      imageName,  
-      [name]: files[0],
-    }));
-  } else {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  }
-};
+      setFormData((prevData) => ({
+        ...prevData,
+        imageName,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
 
-const handleKeyPress = (event) => {
-  if (event.key === " ") {
-    event.preventDefault();
-    setFormData({
-      ...formData,
-      tag: formData.tag.trim() + ",",
-    });
-  }
-};
+  const handleKeyPress = (event) => {
+    if (event.key === " ") {
+      event.preventDefault();
+      setFormData({
+        ...formData,
+        tag: formData.tag.trim() + ",",
+      });
+    }
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
       const imageUrl = await handleUpload();
       const docRef = await addDoc(collection(db, "property"), {
-          tag: formData.tag,
-          title: formData.title,
-          description: descVal,
-          author:localStorage.getItem('userName'),
-          date: formData.date,
-          image: imageUrl,
+        tag: formData.tag,
+        beds: formData.beds,
+        baths: formData.baths,
+        area: formData.area,
+        askedPrice: formData.askedPrice,
+        soldPrice: formData.soldPrice,
+        title: formData.title,
+        description: descVal,
+        author: localStorage.getItem('userName'),
+        date: formData.date,
+        image: imageUrl,
       });
 
       console.log("Document written with ID: ", docRef.id);
-  } catch (error) {
-    setLoading(false)
-    toast.error(error.message, toastUtil)
+    } catch (error) {
+      setLoading(false)
+      toast.error(error.message, toastUtil)
       console.error("Error adding document: ", error);
-  }
-  finally{
-    toast.success("Property Added!!!", toastUtil)
-    setLoading(false)
-    setFormData(null)
-    navigate(RoutesEnums.BLOGS)
-  }
-};
+    }
+    finally {
+      toast.success("Property Added!!!", toastUtil)
+      setLoading(false)
+      setFormData(null)
+      navigate(RoutesEnums.BLOGS)
+    }
+  };
 
   return (
     <>
@@ -243,6 +248,61 @@ const handleSubmit = async (e) => {
                       </div>
                     </div>
 
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Beds <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="beds"
+                          id="blog-beds"
+                          type="number"
+                          className="form-control"
+                          placeholder="Number of Beds :"
+                          onChange={handleChange}
+                          onKeyDown={handleKeyPress}
+                          value={formData.beds}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Baths <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="baths"
+                          id="blog-baths"
+                          type="number"
+                          className="form-control"
+                          placeholder="Number of baths :"
+                          onChange={handleChange}
+                          value={formData.baths}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Area <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="area"
+                          id="blog-area"
+                          type="number"
+                          className="form-control"
+                          placeholder="Area in sq feet :"
+                          onChange={handleChange}
+                          value={formData.area}
+                          required
+                        />
+                      </div>
+                    </div>
+
                     <div className="col-12">
                       <div className="mb-3">
                         <label className="form-label">
@@ -255,16 +315,42 @@ const handleSubmit = async (e) => {
                           onChange={setDescVal}
                           required
                         />
-                        {/* <textarea
-                          name="description"
-                          id="blog-description"
-                          rows="4"
+                      </div>
+                    </div>
+
+                    <div div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">
+                        Asked Price <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="askedPrice"
+                          id="blog-askedPrice"
+                          type="number"
                           className="form-control"
-                          placeholder="Description :"
+                          placeholder="Asked Price :"
                           onChange={handleChange}
-                          value={formData.description}
+                          value={formData.askedPrice}
                           required
-                        ></textarea> */}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Sold Price <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="soldPrice"
+                          id="blog-soldPrice"
+                          type="number"
+                          className="form-control"
+                          placeholder="Sold Price :"
+                          onChange={handleChange}
+                          value={formData.soldPrice}
+                          required
+                        />
                       </div>
                     </div>
 
@@ -307,20 +393,8 @@ const handleSubmit = async (e) => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* <div className="container-fluid mt-100 mt-60">
-                <div className="row">
-                    <div className="col-12 p-0">
-                        <div className="card map border-0">
-                            <div className="card-body p-0">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin" style={{border:"0" }} title="Townter" allowFullScreen></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
-      </section>
+        </div >
+      </section >
       <Footer />
     </>
   );

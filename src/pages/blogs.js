@@ -3,18 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import bg3 from "../assect/images/bg/03.jpg";
 import Footer from "../components/footer";
-import { db } from "../config";
 import {
   collection,
   getDocs,
   query,
-  startAfter,
-  limit,
+  deleteDoc,
   orderBy,
+  doc,
 } from "firebase/firestore";
 import Spinner from "../common/loading-spinner";
 import RoutesEnums from "../enums/routes.enums";
 import "../App.css";
+import { FiCamera, FiDelete, FiHeart} from "react-icons/fi";
+import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
 
@@ -22,7 +23,6 @@ export default function Blogs() {
   const [loading, setLoading] = useState(false);
   const [allData, setAllData] = useState([]); // Store all data from all pages
   const [currentPageData, setCurrentPageData] = useState([]);
-  const [lastDoc, setLastDoc] = useState(null);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
 
@@ -31,10 +31,6 @@ export default function Blogs() {
   useEffect(() => {
     getCollectionLength();
   }, []);
-
-    useEffect(() => {
-      fetchData();
-    }, []);
 
   const getCollectionLength = async () => {
     setLoading(true)
@@ -49,65 +45,45 @@ export default function Blogs() {
         id: doc.id,
       }));
       setAllData(newData);
+      setCurrentPageData(newData.slice(0, pageSize));
+
       setTotalBlogs(collectionLength);
-      // Call fetchData after getting the collection length
-      fetchData();
     } catch (error) {
       console.error("Error getting collection length:", error);
     }
-    finally{
+    finally {
       setLoading(false)
     }
   };
 
-  const fetchData = async () => {
-    setLoading(true);
-    let q = query(collection(db, "blog"), orderBy("date"), limit(pageSize));
+  const handleDelete = async (id) => {
+    try {
+      const propertyRef = doc(db, "property", id);
 
-    if (lastDoc) {
-      // If lastDoc exists, modify the query to start after the last document
-      q = query(
-        collection(db, "blog"),
-        orderBy("date"),
-        startAfter(lastDoc),
-        limit(pageSize)
+      await deleteDoc(propertyRef);
+
+      setAllData((prevAllData) => prevAllData.filter((item) => item.id !== id));
+      setCurrentPageData((prevPageData) =>
+        prevPageData.filter((item) => item.id !== id)
       );
+    } catch (error) {
+      console.error("Error deleting document:", error);
     }
-
-    setLoading(false);
-
-    const querySnapshot = await getDocs(q);
-
-    const newData = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-
-    // Combine new data with existing data
-    //setAllData((prevAllData) => [...prevAllData, ...newData]);
-    // Set the data for the current page
-    setCurrentPageData(newData);
-    // Use a callback to ensure the latest value of lastDoc
-    setLastDoc(() => querySnapshot.docs[querySnapshot.docs.length - 1]);
   };
-
-  //   const loadMore = () => {
-  //     fetchData();
-  //   };
 
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
   };
   const maxLength = 30;
 
- const renderDescription = (description) => {
-   const strippedDescription = description.replace(/<[^>]*>/g, "");
-   if (strippedDescription?.length <= maxLength) {
-     return strippedDescription;
-   } else {
-     return `${strippedDescription?.slice(0, maxLength)}...`;
-   }
- };
+  const renderDescription = (description) => {
+    const strippedDescription = description.replace(/<[^>]*>/g, "");
+    if (strippedDescription?.length <= maxLength) {
+      return strippedDescription;
+    } else {
+      return `${strippedDescription?.slice(0, maxLength)}...`;
+    }
+  };
 
   const renderPaginationLinks = () => {
     const totalPages = calculateTotalPages();
@@ -207,47 +183,54 @@ export default function Blogs() {
         <div className="container">
           <div className="row g-4">
             {currentPageData.map((item, index) => {
+
               return (
-                <div className="col-lg-4 col-md-6" key={index}>
-                  <div className="card blog blog-primary shadow rounded-3 overflow-hidden border-0">
-                    <div className="card-img blog-image position-relative overflow-hidden rounded-0">
-                      <div className="position-relative overflow-hidden">
-                        <img
-                          src={item.image}
-                          className="img-fluid img-fixed"
-                          style={{
-                            objectFit: "contain",
-                            aspectRatio: "1/1",
-                          }}
-                          alt=""
-                        />
-                        <div className="card-overlay"></div>
-                      </div>
-
-                      <div className="blog-tag p-3">
-                        {item?.tag?.split(",").map((tag, index) => (
-                          <Link
-                            key={index}
-                            className="badge badge-link bg-primary ms-1"
-                            to={`/tags/${tag?.trim()}`} // Assuming you want to link to a specific tag page
-                          >
-                            {tag?.trim()}
-                          </Link>
-                        ))}
-                      </div>
+                <div className="col-lg-4 col-md-6 col-12" key={index}>
+                  <div className="card property border-0 shadow position-relative overflow-hidden rounded-3">
+                    <div className="property-image position-relative overflow-hidden shadow">
+                      <img src={item.image} className="img-fluid" alt="" />
+                      <ul className="list-unstyled property-icon">
+                        <li onClick={() => handleDelete(item.id)} className=""><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiDelete className="icons" /></Link></li>
+                        <li className="mt-1"><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiHeart className="icons" /></Link></li>
+                        <li className="mt-1"><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiCamera className="icons" /></Link></li>
+                      </ul>
                     </div>
+                    <div className="card-body content p-4">
+                      <Link to={`/property-detail/${item.id}`} className="title fs-5 text-dark fw-medium">{item.title}</Link>
 
-                    <div className="card-body content p-0">
-                      <div className="p-4">
-                        <Link
-                          to={`/blog-detail/${item.id}`}
-                          className="title fw-medium fs-5 text-dark"
-                        >
-                          {renderDescription(item.title)}
-                        </Link>
-                        <p dangerouslySetInnerHTML={{__html: renderDescription(item.description)}} className="text-muted mt-2 text-ellipsis">
-                        </p>
+                      <ul className="list-unstyled mt-3 py-3 border-top border-bottom d-flex align-items-center justify-content-between">
+                        <li className="d-flex align-items-center me-3">
+                          <i className="mdi mdi-arrow-expand-all fs-5 me-2 text-primary"></i>
+                          <span className="text-muted">{item.area} sqf</span>
+                        </li>
 
+                        <li className="d-flex align-items-center me-3">
+                          <i className="mdi mdi-bed fs-5 me-2 text-primary"></i>
+                          <span className="text-muted">{item.beds} Beds</span>
+                        </li>
+
+                        <li className="d-flex align-items-center">
+                          <i className="mdi mdi-shower fs-5 me-2 text-primary"></i>
+                          <span className="text-muted">{item.baths} Baths</span>
+                        </li>
+                      </ul>
+                      <ul className="list-unstyled d-flex justify-content-between mt-2 mb-0">
+                        <li className="list-inline-item mb-0">
+                          <span className="text-muted">Asked Price</span>
+                          <p className="fw-medium mb-0">{item.askedPrice} PKR</p>
+                        </li>
+
+                        <li className="list-inline-item mb-0">
+                          <span className="text-muted">Sold Price</span>
+                          <p className="fw-medium mb-0">{item.soldPrice} PKR</p>
+                        </li>
+
+                        <li className="list-inline-item mb-0">
+                          <span className="text-muted">Predicted Price</span>
+                          <p className="fw-medium mb-0">5000 PKR</p>
+                        </li>
+                      </ul>
+                      <div className="mt-4">
                         <Link
                           to={`/property-detail/${item.id}`}
                           className="text-dark read-more"
@@ -256,10 +239,11 @@ export default function Blogs() {
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
                       </div>
+
                     </div>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
 
