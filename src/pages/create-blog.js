@@ -115,12 +115,13 @@ export default function CreateBlog() {
         baths: formData.baths,
         area: formData.area,
         askedPrice: formData.askedPrice,
-        soldPrice: formData.soldPrice,
+        // soldPrice: formData.soldPrice,
         title: formData.title,
         description: descVal,
         author: localStorage.getItem('userName'),
         date: formData.date,
         image: imageUrl,
+        isSold: false,
       });
 
       console.log("Document written with ID: ", docRef.id);
@@ -337,7 +338,7 @@ export default function CreateBlog() {
                     </div>
 
                     <div className="col-md-6">
-                      <div className="mb-3">
+                      {/* <div className="mb-3">
                         <label className="form-label">
                           Sold Price <span className="text-danger">*</span>
                         </label>
@@ -351,7 +352,7 @@ export default function CreateBlog() {
                           value={formData.soldPrice}
                           required
                         />
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="col-12">

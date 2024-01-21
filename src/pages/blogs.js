@@ -6,15 +6,17 @@ import Footer from "../components/footer";
 import {
   collection,
   getDocs,
+  setDoc,
   query,
   deleteDoc,
   orderBy,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import Spinner from "../common/loading-spinner";
 import RoutesEnums from "../enums/routes.enums";
 import "../App.css";
-import { FiArrowDownRight, FiCamera, FiDelete, FiHeart } from "react-icons/fi";
+import { FiCamera, FiDelete, FiHeart } from "react-icons/fi";
 import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
@@ -25,8 +27,7 @@ export default function Blogs() {
   const [currentPageData, setCurrentPageData] = useState([]);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
-  const [inputModal, setInputModal] = useState(false);
-
+  const [salePrice, setSalePrice] = useState();
 
   let navigate = useNavigate();
 
@@ -72,6 +73,53 @@ export default function Blogs() {
       console.error("Error deleting document:", error);
     }
   };
+
+  const handleSold = (item) => {
+    const newData = [...allData];
+    let trueIndex = newData.findIndex(data => data.id === item.id)
+    newData[trueIndex].isSold = true;
+    setAllData(newData);
+    setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
+
+  }
+  // const handleSale = async (item) => {
+  //   try {
+  //     const docRef = await setDoc(collection(db, "property"), {
+  //       ...item,
+  //       salePrice: 65
+  //     }).then(res => {
+  //       const newData = [...allData];
+  //       let trueIndex = newData.findIndex(data => data.id === item.id)
+  //       newData[trueIndex].salePrice = salePrice;
+  //       setAllData(newData);
+  //       setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  // const handleSale = async (item) => {
+  //   try {
+  //     const propertyRef = await doc(db, "property", item.id);
+
+  //     await updateDoc(propertyRef, {
+  //       salePrice: 65
+  //     }).then(res => {
+  //       const newData = [...allData];
+  //       let trueIndex = newData.findIndex(data => data.id === item.id)
+  //       newData[trueIndex].salePrice = 65;
+  //       setAllData(newData);
+  //       setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
+  //     }).catch(err => {
+  //       console.log(err)
+  //     });
+
+  //   } catch (error) {
+  //     console.log("Error updating document:", error);
+  //   }
+  // }
+
 
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
@@ -221,12 +269,6 @@ export default function Blogs() {
                           <span className="text-muted">Asked Price</span>
                           <p className="fw-medium mb-0">{item.askedPrice} PKR</p>
                         </li>
-
-                        <li className="list-inline-item mb-0">
-                          <span className="text-muted">Sold Price</span>
-                          <p className="fw-medium mb-0">{item.soldPrice} PKR</p>
-                        </li>
-
                         <li className="list-inline-item mb-0">
                           <span className="text-muted">Predicted Price</span>
                           <p className="fw-medium mb-0">5000 PKR</p>
@@ -240,29 +282,15 @@ export default function Blogs() {
                           View Property0{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
-                        <button onClick={() => setInputModal(!inputModal)} className="badge bg-primary">Mark as Sold</button>
-                        <div
-                          className={`${inputModal === true ? "show" : ""
-                            } dropdown-menu dd-menu dropdown-menu-start bg-white rounded-3 border-0 mt-3 p-0 right-0`}
-                          style={{ width: "200px", right: "150px", bottom: "20px" }}
-                        >
-                          <div className="search-bar rounded-3 border bg-primary text-light">
-                            <div id="itemSold" className="mb-0 d-flex align-items-center">
-                              <input
-                                type="text"
-                                className="form-control border-0 bg-transparent"
-                                name="s"
-                                id="soldItem"
-                                placeholder="Sold Price"
-                              />
-                                <FiArrowDownRight />
-                            </div>
-                          </div>
-                        </div>
-
+                        {!item.isSold && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
+                        {item.isSold && <div className="d-flex flex-column" style={{ width:"45%" }}>
+                          <input className="rounded" onChange={(e) => {
+                            setSalePrice(e.target.value)
+                          }} placeholder="Enter sale price" />
+                          <button className="badge bg-primary mt-2 fs-5">Sell</button>
+                        </div>}
+                        {/* {item.isSold && <button className="badge bg-primary">Sold</button>} */}
                       </div>
-
-
                     </div>
                   </div>
                 </div>
