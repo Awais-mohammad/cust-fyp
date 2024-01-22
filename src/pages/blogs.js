@@ -13,6 +13,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+
 import Spinner from "../common/loading-spinner";
 import RoutesEnums from "../enums/routes.enums";
 import "../App.css";
@@ -82,44 +83,26 @@ export default function Blogs() {
     setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
 
   }
-  // const handleSale = async (item) => {
-  //   try {
-  //     const docRef = await setDoc(collection(db, "property"), {
-  //       ...item,
-  //       salePrice: 65
-  //     }).then(res => {
-  //       const newData = [...allData];
-  //       let trueIndex = newData.findIndex(data => data.id === item.id)
-  //       newData[trueIndex].salePrice = salePrice;
-  //       setAllData(newData);
-  //       setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
-  // const handleSale = async (item) => {
-  //   try {
-  //     const propertyRef = await doc(db, "property", item.id);
+  const handleSale = async (item) => {
+  //   console.log(salePrice, "=========")
+  //   const propertyRef = db.collection('property').doc(item.id);
 
-  //     await updateDoc(propertyRef, {
-  //       salePrice: 65
-  //     }).then(res => {
-  //       const newData = [...allData];
-  //       let trueIndex = newData.findIndex(data => data.id === item.id)
-  //       newData[trueIndex].salePrice = 65;
-  //       setAllData(newData);
-  //       setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
-  //     }).catch(err => {
-  //       console.log(err)
-  //     });
+  //     try {
+  //       const doc = await propertyRef.get();
 
-  //   } catch (error) {
-  //     console.log("Error updating document:", error);
-  //   }
-  // }
+  //       if (doc.exists) {
+  //         await propertyRef.update({
+  //           salePrice: salePrice,
+  //         });
 
+  //         console.log('Document successfully updated!');
+  //       } else {
+  //         console.log('Document not found!');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error updating document: ', error);
+      }
 
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
@@ -238,7 +221,7 @@ export default function Blogs() {
                 <div className="col-lg-4 col-md-6 col-12" key={index}>
                   <div className="card property border-0 shadow position-relative overflow-hidden rounded-3">
                     <div className="property-image position-relative overflow-hidden shadow">
-                      <img src={item.image} className="img-fluid" alt="" />
+                      <img src={item.images[0]} className="img-fluid" alt="" />
                       <ul className="list-unstyled property-icon">
                         <li onClick={() => handleDelete(item.id)} className=""><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiDelete className="icons" /></Link></li>
                         <li className="mt-1"><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiHeart className="icons" /></Link></li>
@@ -279,15 +262,15 @@ export default function Blogs() {
                           to={`/property-detail/${item.id}`}
                           className="text-dark read-more"
                         >
-                          View Property0{" "}
+                          View Property{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
                         {!item.isSold && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
-                        {item.isSold && <div className="d-flex flex-column" style={{ width:"45%" }}>
+                        {item.isSold && <div className="d-flex flex-column" style={{ width: "45%" }}>
                           <input className="rounded" onChange={(e) => {
                             setSalePrice(e.target.value)
                           }} placeholder="Enter sale price" />
-                          <button className="badge bg-primary mt-2 fs-5">Sell</button>
+                          <button onClick={() => { handleSale(item) }} className="badge bg-primary mt-2 fs-5">Sell</button>
                         </div>}
                         {/* {item.isSold && <button className="badge bg-primary">Sold</button>} */}
                       </div>

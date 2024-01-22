@@ -29,71 +29,135 @@ export default function CreateBlog() {
     author: "",
     date: "",
     image: "",
+    address: "",
   });
   const [percent, setPercent] = useState(0);
   const [showPercentBar, setShowPercentBar] = useState(false)
   const [loading, setLoading] = useState(false);
+  const [imageArray, setImageArray] = useState([]);
 
 
-  const handleUpload = () => {
-    setLoading(true)
-    return new Promise((resolve, reject) => {
-      if (!formData.image) {
-        alert("Please choose a file first!");
-        reject("No file selected");
-        return;
-      }
-
-      const storageRef = ref(storage, `/blogImages/${formData.imageName}`);
-      const uploadTask = uploadBytesResumable(storageRef, formData.image);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const percent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setShowPercentBar(true)
-          setPercent(percent);
-        },
-        (err) => {
-          console.error(err);
-          setLoading(false)
-          reject(err);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref)
-            .then((url) => {
-              console.log(url);
-              resolve(url);
-            })
-            .catch((err) => {
-              console.error(err);
-              reject(err);
-            });
-        }
-      );
-    });
-  };
-  const [descVal, setDescVal] = useState("")
   const handleChange = (e) => {
-    const { name, value, files } = e?.target;
+    const { name, files } = e.target;
 
-    if (name === "image" && files.length > 0) {
-      const imageName = files[0]?.name;
-
-      setFormData((prevData) => ({
-        ...prevData,
-        imageName,
-        [name]: files[0],
-      }));
+    if (name === "images" && files.length > 0) {
+      const images = Array.from(files);
+      setImageArray((prevImages) => [...prevImages, ...images]);
     } else {
+      // Handle other input fields as before
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value,
+        [name]: e.target.value,
       }));
     }
   };
+
+
+  // const handleChange = (e) => {
+  //   const { name, value, files } = e?.target;
+
+  //   if (name === "image" && files.length > 0) {
+  //     const imageName = files[0]?.name;
+
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       imageName,
+  //       [name]: files[0],
+  //     }));
+  //   } else {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
+
+  const handleUpload = () => {
+    setLoading(true);
+
+    return Promise.all(
+      imageArray.map((image) => {
+        const imageName = image.name;
+        const storageRef = ref(storage, `/blogImages/${imageName}`);
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        return new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const percent = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setShowPercentBar(true);
+              setPercent(percent);
+            },
+            (err) => {
+              console.error(err);
+              setLoading(false);
+              reject(err);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref)
+                .then((url) => {
+                  console.log(url);
+                  resolve(url);
+                })
+                .catch((err) => {
+                  console.error(err);
+                  reject(err);
+                });
+            }
+          );
+        });
+      })
+    );
+  };
+
+
+  // const handleUpload = () => {
+  //   setLoading(true)
+  //   return new Promise((resolve, reject) => {
+  //     if (!formData.image) {
+  //       alert("Please choose a file first!");
+  //       reject("No file selected");
+  //       return;
+  //     }
+
+  //     const storageRef = ref(storage, `/blogImages/${formData.imageName}`);
+  //     const uploadTask = uploadBytesResumable(storageRef, formData.image);
+
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         const percent = Math.round(
+  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+  //         );
+  //         setShowPercentBar(true)
+  //         setPercent(percent);
+  //       },
+  //       (err) => {
+  //         console.error(err);
+  //         setLoading(false)
+  //         reject(err);
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref)
+  //           .then((url) => {
+  //             console.log(url);
+  //             resolve(url);
+  //           })
+  //           .catch((err) => {
+  //             console.error(err);
+  //             reject(err);
+  //           });
+  //       }
+  //     );
+  //   });
+  // };
+
+
+  const [descVal, setDescVal] = useState("")
+
 
   const handleKeyPress = (event) => {
     if (event.key === " ") {
@@ -107,36 +171,83 @@ export default function CreateBlog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData, ">>>>>>")
     try {
-      const imageUrl = await handleUpload();
+      const imageUrls = await handleUpload();
+      // const imageUrl = await handleUpload();
+
+      // const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(formData.address)}&key=YOUR_API_KEY`;
+      // const geocodingResponse = await fetch(geocodingApiUrl);
+      // const geocodingData = await geocodingResponse.json();
+
+      // if (geocodingData.results && geocodingData.results.length > 0) {
+      // const coordinates = geocodingData.results[0].geometry.location;
       const docRef = await addDoc(collection(db, "property"), {
         tag: formData.tag,
         beds: formData.beds,
         baths: formData.baths,
         area: formData.area,
         askedPrice: formData.askedPrice,
+        address: formData.address,
+        // coordinates: coordinates,
         // soldPrice: formData.soldPrice,
         title: formData.title,
         description: descVal,
         author: localStorage.getItem('userName'),
         date: formData.date,
-        image: imageUrl,
+        // image: imageUrl,
         isSold: false,
+        images: imageUrls,
+
       });
 
       console.log("Document written with ID: ", docRef.id);
+      // } else {
+      //   throw new Error("Unable to get coordinates for the provided address");
+      // }
     } catch (error) {
-      setLoading(false)
-      toast.error(error.message, toastUtil)
+      setLoading(false);
+      toast.error(error.message, toastUtil);
       console.error("Error adding document: ", error);
-    }
-    finally {
-      toast.success("Property Added!!!", toastUtil)
-      setLoading(false)
-      setFormData(null)
-      navigate(RoutesEnums.BLOGS)
+    } finally {
+      setLoading(false);
+      setFormData(null);
+      navigate(RoutesEnums.BLOGS);
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const imageUrl = await handleUpload();
+  //     const docRef = await addDoc(collection(db, "property"), {
+  //       tag: formData.tag,
+  //       beds: formData.beds,
+  //       baths: formData.baths,
+  //       area: formData.area,
+  //       askedPrice: formData.askedPrice,
+  //       // soldPrice: formData.soldPrice,
+  //       title: formData.title,
+  //       description: descVal,
+  //       author: localStorage.getItem('userName'),
+  //       date: formData.date,
+  //       image: imageUrl,
+  //       isSold: false,
+  //     });
+
+  //     console.log("Document written with ID: ", docRef.id);
+  //   } catch (error) {
+  //     setLoading(false)
+  //     toast.error(error.message, toastUtil)
+  //     console.error("Error adding document: ", error);
+  //   }
+  //   finally {
+  //     toast.success("Property Added!!!", toastUtil)
+  //     setLoading(false)
+  //     setFormData(null)
+  //     navigate(RoutesEnums.BLOGS)
+  //   }
+  // };
 
   return (
     <>
@@ -322,7 +433,7 @@ export default function CreateBlog() {
                     <div div className="col-md-6">
                       <div className="mb-3">
                         <label className="form-label">
-                        Asked Price <span className="text-danger">*</span>
+                          Asked Price <span className="text-danger">*</span>
                         </label>
                         <input
                           name="askedPrice"
@@ -359,13 +470,13 @@ export default function CreateBlog() {
                       <div className="mb-3">
                         <label className="form-label">Upload Image</label>
                         <input
-                          name="image"
-                          id="blog-image"
+                          name="images"
+                          id="blog-images"
                           type="file"
-                          accept=".jpg,.jpeg,.png"
+                          accept=".jpg, .jpeg, .png"
                           className="form-control"
                           onChange={handleChange}
-                          defaultValue={formData.image}
+                          multiple
                           required
                         />
                         {showPercentBar && (
@@ -375,6 +486,26 @@ export default function CreateBlog() {
                         )}
                       </div>
                     </div>
+
+                    <div className="col-12">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Address <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="address"
+                          id="blog-address"
+                          type="text"
+                          className="form-control"
+                          placeholder="Address :"
+                          onChange={handleChange}
+                          value={formData.address}
+                          required
+                        />
+                      </div>
+                    </div>
+
+
                   </div>
                   <div className="row">
                     <div className="col-12">

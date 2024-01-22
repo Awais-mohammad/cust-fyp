@@ -4,10 +4,6 @@ import {
     doc,
     getDoc,
 } from "firebase/firestore";
-import image2 from '../../assect/images/property/single/2.jpg'
-import image3 from '../../assect/images/property/single/3.jpg'
-import image4 from '../../assect/images/property/single/4.jpg'
-import image5 from '../../assect/images/property/single/5.jpg'
 import Navbar from "../../components/navbar";
 import ProprtySlider from "../../components/propertySlider";
 import { propertyData } from "../../data/data";
@@ -15,13 +11,13 @@ import Lightbox from 'react-18-image-lightbox'
 import "../../../node_modules/react-18-image-lightbox/style.css"
 import Footer from "../../components/footer";
 import { db } from "../../config";
+import Spinner from "../../common/loading-spinner";
 
 export default function PropertyDetails() {
     const [property, setProperty] = useState({});
-    const [isForSale, setIsForSale] = useState(true);
-
     const params = useParams()
     const id = params.id;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -30,19 +26,27 @@ export default function PropertyDetails() {
                 setProperty(res.data());
             } catch (error) {
                 console.error('Error fetching data:', error);
+            } finally {
+                // Set loading to false once data is fetched (success or failure)
+                setLoading(false);
             }
         };
+
         if (params.id) {
             fetchData();
         }
+
         return () => {
+            // Cleanup if needed
         };
     }, [params.id]);
-
+    
     const data = propertyData.find((item) => item.id === parseInt(id))
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [open, setIsOpen] = useState(false);
-    const images = [property?.image, image2, image3, image4, image5]
+    const [loading, setLoading] = useState(true);
+
+    const images = property?.images
 
     const handleMovePrev = () => {
         setCurrentImageIndex((prevIndex) => (prevIndex + images.length - 1) % images.length);
@@ -52,16 +56,14 @@ export default function PropertyDetails() {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     };
 
-    const handleSale = () => {
-        isForSale ? setIsForSale(false) : setIsForSale(true)
-    }
-
     const handleImageClick = (index) => {
         setCurrentImageIndex(index);
         setIsOpen(true);
     };
 
-
+    if (loading || !images || images.length === 0) {
+        return <Spinner />
+    }
 
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = property?.description;
@@ -76,7 +78,7 @@ export default function PropertyDetails() {
                     <div className="row g-2">
                         <div className="col-md-6">
                             <Link to="#" onClick={() => handleImageClick(0)} className="lightbox" title="">
-                                <img src={property?.image} className="img-fluid rounded-3 shadow" alt="" />
+                                <img src={property?.images[0]} className="img-fluid rounded-3 shadow" alt="" />
                             </Link>
                         </div>
 
@@ -84,25 +86,25 @@ export default function PropertyDetails() {
                             <div className="row g-2">
                                 <div className="col-6">
                                     <Link to="#" onClick={() => handleImageClick(1)} className="lightbox" title="">
-                                        <img src={image2} className="img-fluid rounded-3 shadow" alt="" />
+                                        <img src={images[1]} className="img-fluid rounded-3 shadow" alt="" />
                                     </Link>
                                 </div>
 
                                 <div className="col-6">
                                     <Link to="#" onClick={() => handleImageClick(2)} className="lightbox" title="">
-                                        <img src={image3} className="img-fluid rounded-3 shadow" alt="" />
+                                        <img src={images[2]} className="img-fluid rounded-3 shadow" alt="" />
                                     </Link>
                                 </div>
 
                                 <div className="col-6">
                                     <Link to="#" onClick={() => handleImageClick(3)} className="lightbox" title="">
-                                        <img src={image4} className="img-fluid rounded-3 shadow" alt="" />
+                                        <img src={images[3]} className="img-fluid rounded-3 shadow" alt="" />
                                     </Link>
                                 </div>
 
                                 <div className="col-6">
                                     <Link to="#" onClick={() => handleImageClick(4)} className="lightbox" title="">
-                                        <img src={image5} className="img-fluid rounded-3 shadow" alt="" />
+                                        <img src={images[4]} className="img-fluid rounded-3 shadow" alt="" />
                                     </Link>
                                 </div>
                             </div>
@@ -142,7 +144,7 @@ export default function PropertyDetails() {
                                 <p className="text-muted">{description ? description : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt"}</p>
                                 <div className="mb-3">
                                     <label className="form-label text-muted">
-                                        Feedback 
+                                        Feedback
                                     </label>
                                     <textarea
                                         name="comments"
@@ -166,7 +168,7 @@ export default function PropertyDetails() {
 
                                 <div className="d-flex align-items-center justify-content-between">
                                     <h5 className="mb-0">{property?.soldPrice ? property?.soldPrice : "14745"}</h5>
-                                    <button onClick={handleSale} className="badge bg-primary">{isForSale ? "For Sale" : "Sold"}</button>
+                                    <button className="badge bg-primary">{property?.isSold ? "Sold" : "For Sale"}</button>
                                 </div>
 
                                 <div className="">
