@@ -85,24 +85,20 @@ export default function Blogs() {
   }
 
   const handleSale = async (item) => {
-  //   console.log(salePrice, "=========")
-  //   const propertyRef = db.collection('property').doc(item.id);
-
-  //     try {
-  //       const doc = await propertyRef.get();
-
-  //       if (doc.exists) {
-  //         await propertyRef.update({
-  //           salePrice: salePrice,
-  //         });
-
-  //         console.log('Document successfully updated!');
-  //       } else {
-  //         console.log('Document not found!');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error updating document: ', error);
-      }
+    const prop = await doc(db, "property", item.id);
+    await updateDoc(prop, {
+      salePrice: salePrice,
+      isSold: true
+    }).then(res => {
+      const newData = [...allData];
+      let trueIndex = newData.findIndex(data => data.id === item.id)
+      newData[trueIndex].salePrice = salePrice;
+      newData[trueIndex].isSold = true;
+      setAllData(newData);
+      setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
+    }
+    );
+  }
 
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
@@ -252,6 +248,10 @@ export default function Blogs() {
                           <span className="text-muted">Asked Price</span>
                           <p className="fw-medium mb-0">{item.askedPrice} PKR</p>
                         </li>
+                        {item.salePrice && <li className="list-inline-item mb-0">
+                          <span className="text-muted">Sold Price</span>
+                          <p className="fw-medium mb-0">{item.salePrice} PKR</p>
+                        </li>}
                         <li className="list-inline-item mb-0">
                           <span className="text-muted">Predicted Price</span>
                           <p className="fw-medium mb-0">5000 PKR</p>
@@ -266,13 +266,13 @@ export default function Blogs() {
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
                         {!item.isSold && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
-                        {item.isSold && <div className="d-flex flex-column" style={{ width: "45%" }}>
+                        {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
                           <input className="rounded" onChange={(e) => {
                             setSalePrice(e.target.value)
                           }} placeholder="Enter sale price" />
                           <button onClick={() => { handleSale(item) }} className="badge bg-primary mt-2 fs-5">Sell</button>
                         </div>}
-                        {/* {item.isSold && <button className="badge bg-primary">Sold</button>} */}
+                        {item.isSold && item.salePrice && <button className="badge bg-primary">Sold</button>}
                       </div>
                     </div>
                   </div>
