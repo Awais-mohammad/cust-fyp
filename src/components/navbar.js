@@ -15,7 +15,7 @@ export default function Navbar({ navClass, logolight, menuClass }) {
   const [isSeller, setIsSeller] = useState(false);
 
   const switchMode = () => {
-    isSeller? setIsSeller(false) : setIsSeller(true)
+    isSeller ? setIsSeller(false) : setIsSeller(true)
   }
 
   const iconCheckLoggedIn = () => {
@@ -100,10 +100,10 @@ export default function Navbar({ navClass, logolight, menuClass }) {
         Element.prototype.webkitMatchesSelector ||
         function (s) {
           var matches = (this.document || this.ownerDocument).querySelectorAll(
-              s
-            ),
+            s
+          ),
             i = matches.length;
-          while (--i >= 0 && matches.item(i) !== this) {}
+          while (--i >= 0 && matches.item(i) !== this) { }
           return i > -1;
         };
     }
@@ -189,7 +189,7 @@ export default function Navbar({ navClass, logolight, menuClass }) {
 
           <Link className="logo" to="/">
             <span className="logo-light-mode">
-              <a className={`${navClass}`}><img style={{height:"20px", width:"75px"}} src={scroll ? pierTopBlue:pierTopWhite}/></a>
+              <a className={`${navClass}`}><img style={{ height: "20px", width: "75px" }} src={scroll ? pierTopBlue : pierTopWhite} /></a>
             </span>
           </Link>
 
@@ -209,19 +209,23 @@ export default function Navbar({ navClass, logolight, menuClass }) {
             </div>
           </div>
 
+
           <div className="wrapper-class">
             <ul className="buy-button list-inline mb-0">
-              <li className="list-inline-item ps-1 mb-0">
-                <div className="dropdown">
-                  <button
-                    type="button"
-                    className="btn btn-pills btn-primary dropdown-toggle"
-                    onClick={switchMode}
-                  >
-                    {isSeller ? "Switch to buyer" : "Switch to seller"}
-                  </button>
-                </div>
-              </li>
+              {localStorage.getItem("accessToken")
+                &&
+                <li className="list-inline-item ps-1 mb-0">
+                  <div className="dropdown">
+                    <button
+                      type="button"
+                      className="btn btn-pills btn-primary dropdown-toggle"
+                      onClick={switchMode}
+                    >
+                      {isSeller ? "Switch to buyer" : "Switch to seller"}
+                    </button>
+                  </div>
+                </li>
+              }
               <li className="list-inline-item ps-1 mb-0">
                 <div className="dropdown">
                   <button
@@ -232,9 +236,8 @@ export default function Navbar({ navClass, logolight, menuClass }) {
                     <FiSearch className="icons" />
                   </button>
                   <div
-                    className={`${
-                      modal === true ? "show" : ""
-                    } dropdown-menu dd-menu dropdown-menu-start bg-white rounded-3 border-0 mt-3 p-0 right-0`}
+                    className={`${modal === true ? "show" : ""
+                      } dropdown-menu dd-menu dropdown-menu-start bg-white rounded-3 border-0 mt-3 p-0 right-0`}
                     style={{ width: "240px", right: "0" }}
                   >
                     <div className="search-bar">
@@ -306,7 +309,7 @@ export default function Navbar({ navClass, logolight, menuClass }) {
                   <Link to={RoutesEnums.PROPERTY_DETAIL_TWO}>Properties</Link>
                 </li> */}
 
-              {/* <li className="has-submenu parent-parent-menu-item">
+                {/* <li className="has-submenu parent-parent-menu-item">
  </li>
             */}
                 <li className="has-submenu parent-parent-menu-item">

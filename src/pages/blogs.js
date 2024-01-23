@@ -6,15 +6,18 @@ import Footer from "../components/footer";
 import {
   collection,
   getDocs,
+  setDoc,
   query,
   deleteDoc,
   orderBy,
   doc,
+  updateDoc,
 } from "firebase/firestore";
+
 import Spinner from "../common/loading-spinner";
 import RoutesEnums from "../enums/routes.enums";
 import "../App.css";
-import { FiCamera, FiDelete, FiHeart} from "react-icons/fi";
+import { FiCamera, FiDelete, FiHeart } from "react-icons/fi";
 import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
@@ -25,6 +28,7 @@ export default function Blogs() {
   const [currentPageData, setCurrentPageData] = useState([]);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
+  const [salePrice, setSalePrice] = useState();
 
   let navigate = useNavigate();
 
@@ -70,6 +74,31 @@ export default function Blogs() {
       console.error("Error deleting document:", error);
     }
   };
+
+  const handleSold = (item) => {
+    const newData = [...allData];
+    let trueIndex = newData.findIndex(data => data.id === item.id)
+    newData[trueIndex].isSold = true;
+    setAllData(newData);
+    setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
+
+  }
+
+  const handleSale = async (item) => {
+    const prop = await doc(db, "property", item.id);
+    await updateDoc(prop, {
+      salePrice: salePrice,
+      isSold: true
+    }).then(res => {
+      const newData = [...allData];
+      let trueIndex = newData.findIndex(data => data.id === item.id)
+      newData[trueIndex].salePrice = salePrice;
+      newData[trueIndex].isSold = true;
+      setAllData(newData);
+      setCurrentPageData(newData.slice((selectedPage - 1) * pageSize, selectedPage * pageSize));
+    }
+    );
+  }
 
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
@@ -188,7 +217,7 @@ export default function Blogs() {
                 <div className="col-lg-4 col-md-6 col-12" key={index}>
                   <div className="card property border-0 shadow position-relative overflow-hidden rounded-3">
                     <div className="property-image position-relative overflow-hidden shadow">
-                      <img src={item.image} className="img-fluid" alt="" />
+                      <img src={item.images[0]} className="img-fluid" alt="" />
                       <ul className="list-unstyled property-icon">
                         <li onClick={() => handleDelete(item.id)} className=""><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiDelete className="icons" /></Link></li>
                         <li className="mt-1"><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiHeart className="icons" /></Link></li>
@@ -219,27 +248,38 @@ export default function Blogs() {
                           <span className="text-muted">Asked Price</span>
                           <p className="fw-medium mb-0">{item.askedPrice} PKR</p>
                         </li>
-
-                        <li className="list-inline-item mb-0">
+                        {item.salePrice && <li className="list-inline-item mb-0">
                           <span className="text-muted">Sold Price</span>
-                          <p className="fw-medium mb-0">{item.soldPrice} PKR</p>
-                        </li>
-
+                          <p className="fw-medium mb-0">{item.salePrice} PKR</p>
+                        </li>}
                         <li className="list-inline-item mb-0">
                           <span className="text-muted">Predicted Price</span>
                           <p className="fw-medium mb-0">5000 PKR</p>
                         </li>
                       </ul>
-                      <div className="mt-4">
+                      <div className="mt-4 d-flex justify-content-between">
                         <Link
                           to={`/property-detail/${item.id}`}
                           className="text-dark read-more"
                         >
-                          View Property0{" "}
+                          View Property{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
+                        {!item.isSold && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
+                        {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
+                          <input className="rounded" onChange={(e) => {
+                            setSalePrice(e.target.value)
+                          }} placeholder="Enter sale price" />
+                          <button
+                            onClick={() => {
+                              handleSale(item);
+                            }}
+                            className="badge bg-primary mt-2 align-self-end"
+                            style={{ width: "40%" }}
+                          >Sell</button>
+                        </div>}
+                        {item.isSold && item.salePrice && <button className="badge bg-primary">Sold</button>}
                       </div>
-
                     </div>
                   </div>
                 </div>
