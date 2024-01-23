@@ -270,7 +270,13 @@ export default function Blogs() {
                           <input className="rounded" onChange={(e) => {
                             setSalePrice(e.target.value)
                           }} placeholder="Enter sale price" />
-                          <button onClick={() => { handleSale(item) }} className="badge bg-primary mt-2 fs-5">Sell</button>
+                          <button
+                            onClick={() => {
+                              handleSale(item);
+                            }}
+                            className="badge bg-primary mt-2 align-self-end"
+                            style={{ width: "40%" }}
+                          >Sell</button>
                         </div>}
                         {item.isSold && item.salePrice && <button className="badge bg-primary">Sold</button>}
                       </div>

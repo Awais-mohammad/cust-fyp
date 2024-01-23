@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import {
     doc,
     getDoc,
+    updateDoc,
 } from "firebase/firestore";
 import Navbar from "../../components/navbar";
 import ProprtySlider from "../../components/propertySlider";
@@ -15,6 +16,8 @@ import Spinner from "../../common/loading-spinner";
 
 export default function PropertyDetails() {
     const [property, setProperty] = useState({});
+    const [coordinates, setCoordinates] = useState(null);
+    const [feedback, setFeedback] = useState(null);
     const params = useParams()
     const id = params.id;
 
@@ -24,10 +27,13 @@ export default function PropertyDetails() {
                 const q = doc(db, "property", id);
                 const res = await getDoc(q);
                 setProperty(res.data());
+
+                const address = res.data().address;
+                const coordinates = await getCoordinatesFromAddress(address);
+                setCoordinates(coordinates);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
-                // Set loading to false once data is fetched (success or failure)
                 setLoading(false);
             }
         };
@@ -40,7 +46,26 @@ export default function PropertyDetails() {
             // Cleanup if needed
         };
     }, [params.id]);
-    
+
+    const getCoordinatesFromAddress = async (address) => {
+        try {
+            const apiKey = "AIzaSyC38c0FOMkP_9H60OrKJ1Yf_gBqhaGSlL8";
+            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`);
+            const data = await response.json();
+
+            if (data.status === "OK" && data.results.length > 0) {
+                const location = data.results[0].geometry.location;
+                return { lat: location.lat, lng: location.lng };
+            } else {
+                console.error("Error getting coordinates from address:", data.status);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error getting coordinates from address:", error);
+            return null;
+        }
+    };
+
     const data = propertyData.find((item) => item.id === parseInt(id))
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [open, setIsOpen] = useState(false);
@@ -60,6 +85,13 @@ export default function PropertyDetails() {
         setCurrentImageIndex(index);
         setIsOpen(true);
     };
+
+    const handleFeedback = async (property) => {
+        const prop = await doc(db, "property", id);
+        await updateDoc(prop, {
+            feedback: feedback,
+        })
+    }
 
     if (loading || !images || images.length === 0) {
         return <Spinner />
@@ -143,22 +175,43 @@ export default function PropertyDetails() {
 
                                 <p className="text-muted">{description ? description : "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt"}</p>
                                 <div className="mb-3">
-                                    <label className="form-label text-muted">
-                                        Feedback
-                                    </label>
+                                    <div className="d-flex align-items-center justify-content-between">
+
+                                        <label className="form-label fs-5 text-muted">
+                                            Feedback & Testimonials
+                                        </label>
+                                        <button onClick={() => {
+                                            handleFeedback(property)
+                                        }} className="badge bg-primary">Submit</button>
+                                    </div>
+
                                     <textarea
                                         name="comments"
                                         id="comments"
                                         rows="4"
                                         className="form-control text-muted"
                                         placeholder="Give Feedback"
+                                        onChange={(e) => {
+                                            setFeedback(e.target.value)
+                                          }}
                                     ></textarea>
                                 </div>
-                                <div className="card map border-0">
+                                {coordinates && <div className="card map border-0">
                                     <div className="card-body p-0">
-                                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin" className="rounded-3" style={{ border: '0' }} title="Townter" allowFullScreen></iframe>
+                                        <iframe
+                                            src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d${coordinates?.lng}!3d${coordinates?.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin`}
+                                            className="rounded-3"
+                                            style={{ border: '0' }}
+                                            title="Townter"
+                                            allowFullScreen
+                                        ></iframe>
                                     </div>
+                                </div>}
+                                {!coordinates && <div className="fs-5">
+                                    <span className="bg-primary p-2 rounded text-light">Address : </span>
+                                    <p className="d-inline ps-2 text-muted">{property?.address}</p>
                                 </div>
+                                }
                             </div>
                         </div>
 
