@@ -10,7 +10,7 @@ import bg3 from "../../assect/images/bg/03.jpg"
 
 import Navbar from "../../components/navbar";
 import AboutUs from "../../components/about";
-import FeaturedProperties from '../../components/featuredProperties'
+// import FeaturedProperties from '../../components/featuredProperties'
 import Broker from "../../components/broker";
 import GetInTuch from "../../components/getInTuch";
 import FooterTopImage from "../../components/FoterTopImage";
@@ -18,10 +18,11 @@ import FooterTopImage from "../../components/FoterTopImage";
 import CountUp from 'react-countup';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
-import ModalVideo from 'react-modal-video';
+// import ModalVideo from 'react-modal-video';
 import "../../../node_modules/react-modal-video/css/modal-video.css"
 import Footer from "../../components/footer";
 import Spinner from "../../common/loading-spinner";
+import Blogs from "../blogs";
 
 
 export default function IndexThree(){
@@ -140,7 +141,7 @@ export default function IndexThree(){
             </div>
 
             <div className="container mt-100 mt-60">
-                <FeaturedProperties/>
+                <Blogs onHome={true}/>
             </div>
 
             <div className="container-fluid mt-100 mt-60">

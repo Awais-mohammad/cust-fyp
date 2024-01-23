@@ -171,17 +171,12 @@ export default function CreateBlog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData, ">>>>>>")
     try {
       const imageUrls = await handleUpload();
-      // const imageUrl = await handleUpload();
+      const randomPercentage = Math.random() * 60 - 30;
+      let predictedPrice = formData?.askedPrice * (1 + (randomPercentage / 100));
+      predictedPrice = Math.round(predictedPrice)
 
-      // const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(formData.address)}&key=YOUR_API_KEY`;
-      // const geocodingResponse = await fetch(geocodingApiUrl);
-      // const geocodingData = await geocodingResponse.json();
-
-      // if (geocodingData.results && geocodingData.results.length > 0) {
-      // const coordinates = geocodingData.results[0].geometry.location;
       const docRef = await addDoc(collection(db, "property"), {
         tag: formData.tag,
         beds: formData.beds,
@@ -189,22 +184,16 @@ export default function CreateBlog() {
         area: formData.area,
         askedPrice: formData.askedPrice,
         address: formData.address,
-        // coordinates: coordinates,
-        // soldPrice: formData.soldPrice,
+        predictedPrice: predictedPrice,
         title: formData.title,
         description: descVal,
         author: localStorage.getItem('userName'),
         date: formData.date,
-        // image: imageUrl,
         isSold: false,
         images: imageUrls,
 
       });
 
-      console.log("Document written with ID: ", docRef.id);
-      // } else {
-      //   throw new Error("Unable to get coordinates for the provided address");
-      // }
     } catch (error) {
       setLoading(false);
       toast.error(error.message, toastUtil);

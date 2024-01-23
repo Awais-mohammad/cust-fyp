@@ -22,7 +22,7 @@ import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
 
-export default function Blogs() {
+export default function Blogs({ onHome }) {
   const [loading, setLoading] = useState(false);
   const [allData, setAllData] = useState([]); // Store all data from all pages
   const [currentPageData, setCurrentPageData] = useState([]);
@@ -254,7 +254,7 @@ export default function Blogs() {
                         </li>}
                         <li className="list-inline-item mb-0">
                           <span className="text-muted">Predicted Price</span>
-                          <p className="fw-medium mb-0">5000 PKR</p>
+                          <p className="fw-medium mb-0">{item.predictedPrice} PKR</p>
                         </li>
                       </ul>
                       <div className="mt-4 d-flex justify-content-between">
@@ -287,7 +287,7 @@ export default function Blogs() {
             })}
           </div>
 
-          <div className="row">
+          {!onHome && <div className="row">
             <div className="col-12 mt-4 pt-2">
               <ul className="pagination justify-content-center mb-0">
                 <li className="page-item">
@@ -309,7 +309,7 @@ export default function Blogs() {
                 </li>
               </ul>
             </div>
-          </div>
+          </div>}
         </div>
       </section>
       <Footer />
