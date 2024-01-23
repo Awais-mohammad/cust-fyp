@@ -50,11 +50,11 @@ export default function IndexThree(){
                         <div className="row">
                             <div className="col-12">
                                 <div className="title-heading text-start">
-                                    <h1 className="heading fw-bold text-white title-dark mb-3">10765 Hillshire Ave, <br/> Baton Rouge, LA 70810, USA</h1>
+                                    <h1 className="heading fw-bold text-white title-dark mb-3">Top City 1, <br/> Block D, Islamabad, Pakistan</h1>
                                     <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
                                     
                                     <div className="mt-4 pt-2">
-                                        <Link to="#" className="btn btn-pills btn-primary">View Details <i className="mdi mdi-arrow-right"></i></Link>
+                                        <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                     </div>
                                 </div>
                             </div>
@@ -67,11 +67,11 @@ export default function IndexThree(){
                         <div className="row">
                             <div className="col-12">
                                 <div className="title-heading text-start">
-                                    <h1 className="heading fw-bold text-white title-dark mb-3">10765 Hillshire Ave, <br/> Baton Rouge, LA 70810, USA</h1>
+                                    <h1 className="heading fw-bold text-white title-dark mb-3">DHA Phase-4, <br/> Block-H, Lahore, Pakistan</h1>
                                     <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
                                     
                                     <div className="mt-4 pt-2">
-                                        <Link to="#" className="btn btn-pills btn-primary">View Details <i className="mdi mdi-arrow-right"></i></Link>
+                                        <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                     </div>
                                 </div>
                             </div>
@@ -84,11 +84,11 @@ export default function IndexThree(){
                         <div className="row">
                             <div className="col-12">
                                 <div className="title-heading text-start">
-                                    <h1 className="heading fw-bold text-white title-dark mb-3">10765 Hillshire Ave, <br/> Baton Rouge, LA 70810, USA</h1>
+                                    <h1 className="heading fw-bold text-white title-dark mb-3">Clifton, <br/> Block 5, Karachi, Pakistan</h1>
                                     <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
                                     
                                     <div className="mt-4 pt-2">
-                                        <Link to="#" className="btn btn-pills btn-primary">View Details <i className="mdi mdi-arrow-right"></i></Link>
+                                        <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                     </div>
                                 </div>
                             </div>

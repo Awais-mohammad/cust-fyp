@@ -249,19 +249,6 @@ export default function PropertyDetails() {
                         </div>
                     </div>
                 </div>
-
-                <div className="container mt-100 mt-60">
-                    <div className="row justify-content-center">
-                        <div className="col">
-                            <div className="section-title text-center mb-4 pb-2">
-                                <h4 className="title mb-3">Related Properties</h4>
-                                <p className="text-muted para-desc mb-0 mx-auto">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <ProprtySlider />
-                </div>
             </section>
             <Footer />
             {open && (
