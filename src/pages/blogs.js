@@ -150,7 +150,7 @@ export default function Blogs({ onHome }) {
         logolight={true}
         menuClass="navigation-menu nav-left nav-light"
       />
-      <section
+      {!onHome && <section
         className="bg-half-170 d-table w-100"
         style={{ backgroundImage: `url(${bg3})` }}
       >
@@ -181,8 +181,8 @@ export default function Blogs({ onHome }) {
             </nav>
           </div>
         </div>
-      </section>
-      <div className="position-relative">
+      </section>}
+      {!onHome && <div className="position-relative">
         <div className="shape overflow-hidden text-white">
           <svg
             viewBox="0 0 2880 48"
@@ -195,8 +195,8 @@ export default function Blogs({ onHome }) {
             ></path>
           </svg>
         </div>
-      </div>
-      {localStorage.getItem("accessToken") && (
+      </div>}
+      {localStorage.getItem("accessToken") && !onHome && (
         <div className="row justify-content-center pt-4">
           <button
             onClick={() => {
@@ -313,7 +313,7 @@ export default function Blogs({ onHome }) {
           </div>}
         </div>
       </section>
-      <Footer />
+      {!onHome && <Footer />}
     </>
   );
 }
