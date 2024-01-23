@@ -29,6 +29,7 @@ export default function Blogs({ onHome }) {
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
   const [salePrice, setSalePrice] = useState();
+  const user = localStorage.getItem('userName')
 
   let navigate = useNavigate();
 
@@ -265,7 +266,7 @@ export default function Blogs({ onHome }) {
                           View Property{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
-                        {!item.isSold && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
+                        {!item.isSold && item.author === user && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
                         {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
                           <input className="rounded" onChange={(e) => {
                             setSalePrice(e.target.value)
