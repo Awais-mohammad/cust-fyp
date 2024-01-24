@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import bg3 from "../assect/images/bg/03.jpg";
 import Footer from "../components/footer";
+import whatsappLogo from '../assect/images/WhatsApp.png';
 import {
   collection,
   getDocs,
@@ -29,6 +30,7 @@ export default function Blogs({ onHome }) {
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
   const [salePrice, setSalePrice] = useState();
+  const [isSeller, setIsSeller] = useState(false);
   const user = localStorage.getItem('userName')
 
   let navigate = useNavigate();
@@ -101,6 +103,14 @@ export default function Blogs({ onHome }) {
     );
   }
 
+  const handleWhatsAppClick = () => {
+    const phoneNumber = '+923119599700';
+    const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
+
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+  };
+
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
   };
@@ -149,6 +159,8 @@ export default function Blogs({ onHome }) {
         navClass="defaultscroll sticky"
         logolight={true}
         menuClass="navigation-menu nav-left nav-light"
+        isSeller={isSeller}
+        setIsSeller={setIsSeller}
       />
       {!onHome && <section
         className="bg-half-170 d-table w-100"
@@ -266,7 +278,8 @@ export default function Blogs({ onHome }) {
                           View Property{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
-                        {!item.isSold && item.author === user && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
+                        {!item.isSold && !isSeller && <img onClick={handleWhatsAppClick} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />}
+                        {!item.isSold && item.author === user && isSeller && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
                         {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
                           <input className="rounded" onChange={(e) => {
                             setSalePrice(e.target.value)

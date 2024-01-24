@@ -8,11 +8,11 @@ import "../App.css";
 import { logout } from "../pages/auth/auth-functions";
 import RoutesEnums from "../enums/routes.enums";
 
-export default function Navbar({ navClass, logolight, menuClass }) {
+export default function Navbar({ navClass, logolight, menuClass, isSeller, setIsSeller }) {
   const [scroll, setScroll] = useState(false);
   const [isMenu, setisMenu] = useState(false);
   const [modal, setModal] = useState(false);
-  const [isSeller, setIsSeller] = useState(false);
+  // const [isSeller, setIsSeller] = useState(false);
 
   const switchMode = () => {
     isSeller ? setIsSeller(false) : setIsSeller(true)
