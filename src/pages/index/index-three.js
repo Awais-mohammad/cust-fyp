@@ -124,9 +124,9 @@ export default function IndexThree() {
 
                         <div className="col-lg-6 col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
                             <div className="section-title ms-lg-5">
-                                <h6 className="text-primary fw-medium mb-2">Our story: Towntor</h6>
+                                <h6 className="text-primary fw-medium mb-2">Our story: Real Estate Predictor</h6>
                                 <h4 className="title mb-3">Efficiency. <br /> Transparency. Control.</h4>
-                                <p className="text-muted para-desc mb-0">Towntor developed a platform for the Real Estate marketplace that allows buyers and sellers to easily execute a transaction on their own. The platform drives efficiency, cost transparency and control into the hands of the consumers. Towntor is Real Estate Redefined.</p>
+                                <p className="text-muted para-desc mb-0">Real Estate Predictor developed a platform for the Real Estate marketplace that allows buyers and sellers to easily execute a transaction on their own. The platform drives efficiency, cost transparency and control into the hands of the consumers. Predictor is Real Estate Redefined.</p>
 
                                 <div className="mt-4">
                                     <Link to="/aboutus" className="btn btn-pills btn-primary">Read More <i className="mdi mdi-arrow-right align-middle"></i></Link>

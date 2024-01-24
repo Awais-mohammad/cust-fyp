@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import pierTopBlue from "../assect/images/PierTop-blue.png";
-import pierTopWhite from "../assect/images/PierTop-white.png";
+import LogoBlue from "../assect/images/Real Estate Blue.png";
 import { FiSearch, FiUser, CiLogout } from "../assect/icons/vander";
 import "./navbar.css";
 import "../App.css";
@@ -12,7 +11,6 @@ export default function Navbar({ navClass, logolight, menuClass, isSeller, setIs
   const [scroll, setScroll] = useState(false);
   const [isMenu, setisMenu] = useState(false);
   const [modal, setModal] = useState(false);
-  // const [isSeller, setIsSeller] = useState(false);
 
   const switchMode = () => {
     isSeller ? setIsSeller(false) : setIsSeller(true)
@@ -174,7 +172,7 @@ export default function Navbar({ navClass, logolight, menuClass, isSeller, setIs
         <div className="container">
           <Link className="logo" to="/">
             <span className="logo-light-mode">
-              <a className={`${navClass}`}><img style={{ height: "20px", width: "75px" }} src={scroll ? pierTopBlue : pierTopWhite} /></a>
+              <a className={`${navClass}`}><img style={{ height: "50px", width: "px" }} src={LogoBlue} /></a>
             </span>
           </Link>
 
