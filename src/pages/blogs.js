@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import bg3 from "../assect/images/bg/03.jpg";
 import Footer from "../components/footer";
+import whatsappLogo from '../assect/images/WhatsApp.png';
 import {
   collection,
   getDocs,
@@ -22,13 +23,15 @@ import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
 
-export default function Blogs() {
+export default function Blogs({ onHome }) {
   const [loading, setLoading] = useState(false);
   const [allData, setAllData] = useState([]); // Store all data from all pages
   const [currentPageData, setCurrentPageData] = useState([]);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
   const [salePrice, setSalePrice] = useState();
+  const [isSeller, setIsSeller] = useState(false);
+  const user = localStorage.getItem('userName')
 
   let navigate = useNavigate();
 
@@ -100,6 +103,14 @@ export default function Blogs() {
     );
   }
 
+  const handleWhatsAppClick = () => {
+    const phoneNumber = '+923119599700';
+    const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
+
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+  };
+
   const calculateTotalPages = () => {
     return Math.ceil(totalBlogs / pageSize);
   };
@@ -148,8 +159,10 @@ export default function Blogs() {
         navClass="defaultscroll sticky"
         logolight={true}
         menuClass="navigation-menu nav-left nav-light"
+        isSeller={isSeller}
+        setIsSeller={setIsSeller}
       />
-      <section
+      {!onHome && <section
         className="bg-half-170 d-table w-100"
         style={{ backgroundImage: `url(${bg3})` }}
       >
@@ -180,8 +193,8 @@ export default function Blogs() {
             </nav>
           </div>
         </div>
-      </section>
-      <div className="position-relative">
+      </section>}
+      {!onHome && <div className="position-relative">
         <div className="shape overflow-hidden text-white">
           <svg
             viewBox="0 0 2880 48"
@@ -194,8 +207,8 @@ export default function Blogs() {
             ></path>
           </svg>
         </div>
-      </div>
-      {localStorage.getItem("accessToken") && (
+      </div>}
+      {localStorage.getItem("accessToken") && !onHome && (
         <div className="row justify-content-center pt-4">
           <button
             onClick={() => {
@@ -254,7 +267,7 @@ export default function Blogs() {
                         </li>}
                         <li className="list-inline-item mb-0">
                           <span className="text-muted">Predicted Price</span>
-                          <p className="fw-medium mb-0">5000 PKR</p>
+                          <p className="fw-medium mb-0">{item.predictedPrice} PKR</p>
                         </li>
                       </ul>
                       <div className="mt-4 d-flex justify-content-between">
@@ -265,7 +278,8 @@ export default function Blogs() {
                           View Property{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
-                        {!item.isSold && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
+                        {!item.isSold && !isSeller && <img onClick={handleWhatsAppClick} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />}
+                        {!item.isSold && item.author === user && isSeller && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
                         {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
                           <input className="rounded" onChange={(e) => {
                             setSalePrice(e.target.value)
@@ -287,7 +301,7 @@ export default function Blogs() {
             })}
           </div>
 
-          <div className="row">
+          {!onHome && <div className="row">
             <div className="col-12 mt-4 pt-2">
               <ul className="pagination justify-content-center mb-0">
                 <li className="page-item">
@@ -309,10 +323,10 @@ export default function Blogs() {
                 </li>
               </ul>
             </div>
-          </div>
+          </div>}
         </div>
       </section>
-      <Footer />
+      {!onHome && <Footer />}
     </>
   );
 }

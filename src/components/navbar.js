@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import pierTopBlue from "../assect/images/PierTop-blue.png";
-import pierTopWhite from "../assect/images/PierTop-white.png";
+import LogoBlue from "../assect/images/Real Estate Blue.png";
 import { FiSearch, FiUser, CiLogout } from "../assect/icons/vander";
 import "./navbar.css";
 import "../App.css";
 import { logout } from "../pages/auth/auth-functions";
 import RoutesEnums from "../enums/routes.enums";
 
-export default function Navbar({ navClass, logolight, menuClass }) {
+export default function Navbar({ navClass, logolight, menuClass, isSeller, setIsSeller }) {
   const [scroll, setScroll] = useState(false);
   const [isMenu, setisMenu] = useState(false);
   const [modal, setModal] = useState(false);
-  const [isSeller, setIsSeller] = useState(false);
 
   const switchMode = () => {
     isSeller ? setIsSeller(false) : setIsSeller(true)
@@ -172,24 +170,9 @@ export default function Navbar({ navClass, logolight, menuClass }) {
         className={`${scroll ? "nav-sticky" : ""} ${navClass}`}
       >
         <div className="container">
-          {/* {logolight === true ? (
-            <Link className="logo" to="/">
-              <span className="logo-light-mode">
-                <img src={logoDark} className="l-dark" alt="" />
-                <img src={logoLight} className="l-light" alt="" />
-              </span>
-              <img src={logoLight} className="logo-dark-mode" alt="" />
-            </Link>
-          ) : (
-            <Link className="logo" to="/">
-              <img src={logoDark} className="logo-light-mode" alt="" />
-              <img src={logoLight} className="logo-dark-mode" alt="" />
-            </Link>
-          )} */}
-
           <Link className="logo" to="/">
             <span className="logo-light-mode">
-              <a className={`${navClass}`}><img style={{ height: "20px", width: "75px" }} src={scroll ? pierTopBlue : pierTopWhite} /></a>
+              <a className={`${navClass}`}><img style={{ height: "50px", width: "px" }} src={LogoBlue} /></a>
             </span>
           </Link>
 
@@ -274,44 +257,12 @@ export default function Navbar({ navClass, logolight, menuClass }) {
               <ul className={menuClass}>
                 <li className="has-submenu parent-menu-item">
                   <Link to="/">Services</Link>
-                  {/* <span className="menu-arrow"></span>
-                <ul className="submenu">
-                  <li>
-                    <Link to="/" className="sub-menu-item">
-                      Brokerage
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/index-two" className="sub-menu-item">
-                      Consulting
-                    </Link>
-                  </li>
-                </ul> */}
                 </li>
-
-                {/* <li>
-                <Link to="/buy" className="sub-menu-item">
-                  Buy
-                </Link>
-              </li>
-
-              <li>
-                <Link to="/sell" className="sub-menu-item">
-                  Sell
-                </Link>
-              </li> */}
 
                 <li className="has-submenu parent-parent-menu-item">
                   <Link to="/features">Insight & Research</Link>
                 </li>
 
-                {/* <li className="has-submenu parent-parent-menu-item">
-                  <Link to={RoutesEnums.PROPERTY_DETAIL_TWO}>Properties</Link>
-                </li> */}
-
-                {/* <li className="has-submenu parent-parent-menu-item">
- </li>
-            */}
                 <li className="has-submenu parent-parent-menu-item">
                   <Link to="/blogs">Add Properties</Link>
                 </li>
@@ -319,118 +270,6 @@ export default function Navbar({ navClass, logolight, menuClass }) {
                 <li className="has-submenu parent-parent-menu-item">
                   <Link to="/aboutus">About Us</Link>
                 </li>
-
-                {/* <li className="has-submenu parent-parent-menu-item">
-                <Link to="#">Pages</Link>
-                <span className="menu-arrow"></span>
-                <ul className="submenu">
-                  <li>
-                    <Link to="/aboutus" className="sub-menu-item">
-                      About Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/features" className="sub-menu-item">
-                      Features
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/pricing" className="sub-menu-item">
-                      Pricing
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/faqs" className="sub-menu-item">
-                      Faqs
-                    </Link>
-                  </li>
-                  <li className="has-submenu parent-menu-item">
-                    <Link to="#"> Auth Pages </Link>
-                    <span className="submenu-arrow"></span>
-                    <ul className="submenu">
-                      <li>
-                        <Link to="/auth-login" className="sub-menu-item">
-                          Login
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/auth-signup" className="sub-menu-item">
-                          Signup
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/auth-reset-password"
-                          className="sub-menu-item"
-                        >
-                          Reset Password
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="has-submenu parent-menu-item">
-                    <Link to="#"> Utility </Link>
-                    <span className="submenu-arrow"></span>
-                    <ul className="submenu">
-                      <li>
-                        <Link to="/terms" className="sub-menu-item">
-                          Terms of Services
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/privacy" className="sub-menu-item">
-                          Privacy Policy
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="has-submenu parent-menu-item">
-                    <Link to="#"> Blog </Link>
-                    <span className="submenu-arrow"></span>
-                    <ul className="submenu">
-                      <li>
-                        <Link to="/blogs" className="sub-menu-item">
-                          {" "}
-                          Blogs
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/blog-sidebar" className="sub-menu-item">
-                          {" "}
-                          Blog Sidebar
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/blog-detail" className="sub-menu-item">
-                          {" "}
-                          Blog Detail
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="has-submenu parent-menu-item">
-                    <Link to="#"> Special </Link>
-                    <span className="submenu-arrow"></span>
-                    <ul className="submenu">
-                      <li>
-                        <Link to="/comingsoon" className="sub-menu-item">
-                          Comingsoon
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/maintenance" className="sub-menu-item">
-                          Maintenance
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/error" className="sub-menu-item">
-                          404! Error
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li> */}
 
                 <li>
                   <Link to="/contactus" className="sub-menu-item">
