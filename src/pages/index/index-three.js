@@ -54,7 +54,7 @@ export default function IndexThree() {
                                         <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 
                                         <div className="mt-4 pt-2">
-                                            <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
+                                            <Link to="/blogs" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@ export default function IndexThree() {
                                         <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 
                                         <div className="mt-4 pt-2">
-                                            <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
+                                            <Link to="/blogs" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ export default function IndexThree() {
                                         <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 
                                         <div className="mt-4 pt-2">
-                                            <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
+                                            <Link to="/blogs" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                         </div>
                                     </div>
                                 </div>
