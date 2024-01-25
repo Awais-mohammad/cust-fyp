@@ -92,11 +92,6 @@ export default function BlogDetail(){
     // ]
     return (
       <>
-        <Navbar
-          navClass="defaultscroll sticky"
-          logolight={true}
-          menuClass="navigation-menu nav-left nav-light"
-        />
         {loading ? (
           <div
             className=""

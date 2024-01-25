@@ -23,14 +23,13 @@ import { db } from "../config";
 
 const pageSize = 6; // Adjust the page size as needed
 
-export default function Blogs({ onHome }) {
+export default function Blogs({ onHome, isSeller }) {
   const [loading, setLoading] = useState(false);
-  const [allData, setAllData] = useState([]); // Store all data from all pages
+  const [allData, setAllData] = useState([]);
   const [currentPageData, setCurrentPageData] = useState([]);
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
   const [salePrice, setSalePrice] = useState();
-  const [isSeller, setIsSeller] = useState(false);
   const user = localStorage.getItem('userName')
 
   let navigate = useNavigate();
@@ -45,7 +44,6 @@ export default function Blogs({ onHome }) {
     try {
       setLoading(true)
       const querySnapshot = await getDocs(q);
-      // Get the length of the collection
       const collectionLength = querySnapshot.size;
       const newData = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -104,7 +102,7 @@ export default function Blogs({ onHome }) {
   }
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = '+923119599700';
+    const phoneNumber = '+923168807850';
     const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
 
     const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -155,13 +153,6 @@ export default function Blogs({ onHome }) {
   return (
     <>
       {loading && <Spinner />}
-      <Navbar
-        navClass="defaultscroll sticky"
-        logolight={true}
-        menuClass="navigation-menu nav-left nav-light"
-        isSeller={isSeller}
-        setIsSeller={setIsSeller}
-      />
       {!onHome && <section
         className="bg-half-170 d-table w-100"
         style={{ backgroundImage: `url(${bg3})` }}
@@ -175,7 +166,7 @@ export default function Blogs({ onHome }) {
                   Listing
                 </p>
                 <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark">
-                  Add Properties
+                  {isSeller ? "Add Properties" : "Properties for Sale"}
                 </h5>
               </div>
             </div>
@@ -210,7 +201,7 @@ export default function Blogs({ onHome }) {
       </div>}
       {localStorage.getItem("accessToken") && !onHome && (
         <div className="row justify-content-center pt-4">
-          <button
+          {isSeller && <button
             onClick={() => {
               navigate(RoutesEnums.CREATE_BLOG);
             }}
@@ -218,7 +209,7 @@ export default function Blogs({ onHome }) {
             style={{ width: "200px" }}
           >
             + Add Property
-          </button>
+          </button>}
         </div>
       )}
       <section className="section">

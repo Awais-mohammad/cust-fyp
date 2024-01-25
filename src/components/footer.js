@@ -1,9 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import logoLight from "../assect/images/logo-light.png";
-import pierTopWhite from "../assect/images/PierTop-white.png";
-import tensorrLogo from "../assect/images/tensorrLogo.png"
+import LogoBlue from "../assect/images/Real Estate Blue.png";
 
 import {
   FiShoppingCart,
@@ -28,7 +26,7 @@ export default function Footer() {
                 <div className="row">
                   <div className="col-lg-5 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
                     <Link to="#" className="logo-footer">
-                      <img style={{height:"20px", width:"75px"}} src={pierTopWhite} alt="" />
+                      <img style={{ height: "70px", width: "px" }} src={LogoBlue} alt="" />
                     </Link>
                     <p className="mt-2">
                       A great plateform to buy, sell and rent your properties
@@ -37,7 +35,7 @@ export default function Footer() {
                     <ul className="list-unstyled social-icon foot-social-icon mb-0 mt-4">
                       <li className="list-inline-item">
                         <Link
-                          to=""
+                          to="#"
                           target="_blank"
                           className="rounded-3"
                         >
@@ -46,7 +44,7 @@ export default function Footer() {
                       </li>
                       <li className="list-inline-item">
                         <Link
-                          to=""
+                          to="#"
                           target="_blank"
                           className="rounded-3"
                         >
@@ -55,7 +53,7 @@ export default function Footer() {
                       </li>
                       <li className="list-inline-item">
                         <Link
-                          to="http://linkedin.com/company/tensorrbusiness"
+                          to="#"
                           target="_blank"
                           className="rounded-3"
                         >
@@ -64,7 +62,7 @@ export default function Footer() {
                       </li>
                       <li className="list-inline-item">
                         <Link
-                          to=""
+                          to="#"
                           target="_blank"
                           className="rounded-3"
                         >
@@ -73,7 +71,7 @@ export default function Footer() {
                       </li>
                       <li className="list-inline-item">
                         <Link
-                          to="https://www.instagram.com/tensorrgroup/"
+                          to="https://www.instagram.com"
                           target="_blank"
                           className="rounded-3"
                         >
@@ -82,7 +80,7 @@ export default function Footer() {
                       </li>
                       <li className="list-inline-item">
                         <Link
-                          to=""
+                          to="#"
                           target="_blank"
                           className="rounded-3"
                         >
@@ -91,7 +89,7 @@ export default function Footer() {
                       </li>
                       <li className="list-inline-item">
                         <Link
-                          to="mailto:support@shreethemes.in"
+                          to="#"
                           className="rounded-3"
                         >
                           <FiMail className="fea icon-sm align-middle" />
@@ -191,11 +189,11 @@ export default function Footer() {
                       <FiMapPin className="fea icon-sm text-primary mt-1 me-3" />
                       <div className="">
                         <p className="mb-2">
-                          C/54 Northwest Freeway, <br /> Suite 558, <br />{" "}
-                          Houston, USA 485
+                          DHA Phase-4, <br /> House - No 5, <br />{" "}
+                          Karachi, Pakistan.
                         </p>
                         <Link
-                          to="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin"
+                          to="#"
                           data-type="iframe"
                           className="text-primary lightbox"
                         >
@@ -217,7 +215,7 @@ export default function Footer() {
                     <div className="d-flex mt-4">
                       <FiPhone className="fea icon-sm text-primary mt-1 me-3" />
                       <Link to="tel:+152534-468-854" className="text-foot">
-                        +152 534-468-854
+                        +92 53446885
                       </Link>
                     </div>
                   </div>

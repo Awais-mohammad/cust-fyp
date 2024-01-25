@@ -1,14 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import bg3 from "../assect/images/bg/03.jpg"
 import map from "../assect/images/map.png"
-
-import Navbar from "../components/navbar";
 import ClientTwo from "../components/clientTwo";
-
 import CountUp from 'react-countup';
-
 import {FiHexagon, FiStar, FiHeart, FiShield,FiDollarSign,FiMapPin,FiPieChart} from '../assect/icons/vander'
 import Footer from "../components/footer";
 
@@ -48,7 +43,6 @@ export default function Features(){
     ]
     return(
         <>
-         <Navbar navClass="defaultscroll sticky" logolight={true} menuClass = "navigation-menu nav-left nav-light"/>
         <section className="bg-half-170 d-table w-100" style={{backgroundImage:`url(${bg3})`}}>
             <div className="bg-overlay bg-gradient-overlay-2"></div>
             <div className="container">

@@ -13,6 +13,8 @@ import "../../../node_modules/react-18-image-lightbox/style.css"
 import Footer from "../../components/footer";
 import { db } from "../../config";
 import Spinner from "../../common/loading-spinner";
+import whatsappLogo from '../../assect/images/WhatsApp.png';
+
 
 export default function PropertyDetails() {
     const [property, setProperty] = useState({});
@@ -66,6 +68,14 @@ export default function PropertyDetails() {
         }
     };
 
+    const handleWhatsAppClick = () => {
+        const phoneNumber = '+923168807850';
+        const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
+
+        const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappLink, '_blank');
+    };
+
     const data = propertyData.find((item) => item.id === parseInt(id))
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [open, setIsOpen] = useState(false);
@@ -91,6 +101,7 @@ export default function PropertyDetails() {
         await updateDoc(prop, {
             feedback: feedback,
         })
+        setFeedback("")
     }
 
     if (loading || !images || images.length === 0) {
@@ -104,7 +115,6 @@ export default function PropertyDetails() {
     const currentImage = images[currentImageIndex];
     return (
         <>
-            <Navbar navClass="defaultscroll sticky" menuClass="navigation-menu nav-left" />
             <section className="section mt-5 pt-4">
                 <div className="container-fluid mt-2">
                     <div className="row g-2">
@@ -191,9 +201,10 @@ export default function PropertyDetails() {
                                         rows="4"
                                         className="form-control text-muted"
                                         placeholder="Give Feedback"
+                                        value={feedback}
                                         onChange={(e) => {
                                             setFeedback(e.target.value)
-                                          }}
+                                        }}
                                     ></textarea>
                                 </div>
                                 {coordinates && <div className="card map border-0">
@@ -241,9 +252,9 @@ export default function PropertyDetails() {
                                     </div>
                                 </div>
 
-                                <div className="d-flex mt-3">
-                                    <Link to="#" className="btn btn-primary w-100 me-2">Message</Link>
-                                    <Link to="#" className="btn btn-primary w-100">+923457789098</Link>
+                                <div className="d-flex align-items-center justify-content-between mt-3">
+                                    <span className="text-muted">Contact Seller :</span>
+                                    <img onClick={handleWhatsAppClick} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />
                                 </div>
                             </div>
                         </div>

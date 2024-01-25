@@ -18,29 +18,17 @@ import FooterTopImage from "../../components/FoterTopImage";
 import CountUp from 'react-countup';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-// import ModalVideo from 'react-modal-video';
 import "../../../node_modules/react-modal-video/css/modal-video.css"
 import Footer from "../../components/footer";
 import Spinner from "../../common/loading-spinner";
 import Blogs from "../blogs";
 
 
-export default function IndexThree() {
+export default function IndexThree({ isSeller }) {
     const [loading, setLoading] = useState(false);
-    /*  useEffect(() => {
-         const showSpinner = () => {
-           setLoading(true);
-           setTimeout(() => {
-             setLoading(false);
-           }, 1000); 
-         };
-         showSpinner();
-         return () => clearTimeout();
-       }, []);  */
-    const [isOpen, setOpen] = useState(false)
+    console.log(isSeller, "ssssssssss")
     return (
         <>
-            <Navbar navClass="defaultscroll sticky" logolight={true} menuClass="navigation-menu nav-left nav-light" />
             <section className="swiper-slider-hero position-relative d-block vh-100" id="home">
                 {loading && <Spinner />}
                 <Carousel infiniteLoop={true} className="vh-100" autoPlay={true} showThumbs={false} showStatus={false}>
@@ -54,7 +42,7 @@ export default function IndexThree() {
                                         <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 
                                         <div className="mt-4 pt-2">
-                                            <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
+                                            <Link to="/blogs" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +59,7 @@ export default function IndexThree() {
                                         <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 
                                         <div className="mt-4 pt-2">
-                                            <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
+                                            <Link to="/blogs" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +76,7 @@ export default function IndexThree() {
                                         <p className="para-desc text-white-50 title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 
                                         <div className="mt-4 pt-2">
-                                            <Link to="#" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
+                                            <Link to="/blogs" className="btn btn-pills btn-primary">View Properties <i className="mdi mdi-arrow-right"></i></Link>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +134,7 @@ export default function IndexThree() {
                             <h3 className="title mb-1">Featured Properties</h3>
                         </div>
                     </div>
-                    <Blogs onHome={true} />
+                    <Blogs isSeller={isSeller} onHome={true} />
                 </div>
 
                 <div className="container-fluid mt-100 mt-60">
