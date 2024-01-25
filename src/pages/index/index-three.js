@@ -18,7 +18,6 @@ import FooterTopImage from "../../components/FoterTopImage";
 import CountUp from 'react-countup';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-// import ModalVideo from 'react-modal-video';
 import "../../../node_modules/react-modal-video/css/modal-video.css"
 import Footer from "../../components/footer";
 import Spinner from "../../common/loading-spinner";
@@ -27,17 +26,6 @@ import Blogs from "../blogs";
 
 export default function IndexThree({ isSeller }) {
     const [loading, setLoading] = useState(false);
-    /*  useEffect(() => {
-         const showSpinner = () => {
-           setLoading(true);
-           setTimeout(() => {
-             setLoading(false);
-           }, 1000); 
-         };
-         showSpinner();
-         return () => clearTimeout();
-       }, []);  */
-    const [isOpen, setOpen] = useState(false)
     console.log(isSeller, "ssssssssss")
     return (
         <>

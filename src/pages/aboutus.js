@@ -2,28 +2,20 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import bg3 from "../assect/images/bg/03.jpg";
-import heroImg from "../assect/images/hero.jpg";
-import dots from "../assect/images/svg/dots.svg";
 import image1 from "../assect/images/1.jpg";
 import map from "../assect/images/map.png";
 import avatar from "../assect/images/client/08.jpg";
 import company from "../assect/images/company.jpg";
 import church from "../assect/images/church.jpg";
 
-import Navbar from "../components/navbar";
-import About from "../components/about";
-import Broker from "../components/broker";
-import Blog from "../components/blog";
 import GetInTuch from "../components/getInTuch";
 
-import ModalVideo from "react-modal-video";
 import "../../node_modules/react-modal-video/css/modal-video.css";
 
 import CountUp from "react-countup";
 import Footer from "../components/footer";
 
 export default function AboutUs() {
-  const [isOpen, setOpen] = useState(false);
   return (
     <>
       <section

@@ -101,6 +101,7 @@ export default function PropertyDetails() {
         await updateDoc(prop, {
             feedback: feedback,
         })
+        setFeedback("")
     }
 
     if (loading || !images || images.length === 0) {
@@ -200,6 +201,7 @@ export default function PropertyDetails() {
                                         rows="4"
                                         className="form-control text-muted"
                                         placeholder="Give Feedback"
+                                        value={feedback}
                                         onChange={(e) => {
                                             setFeedback(e.target.value)
                                         }}

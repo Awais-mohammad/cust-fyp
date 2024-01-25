@@ -1,14 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import bg3 from "../assect/images/bg/03.jpg"
 import map from "../assect/images/map.png"
-
-import Navbar from "../components/navbar";
 import ClientTwo from "../components/clientTwo";
-
 import CountUp from 'react-countup';
-
 import {FiHexagon, FiStar, FiHeart, FiShield,FiDollarSign,FiMapPin,FiPieChart} from '../assect/icons/vander'
 import Footer from "../components/footer";
 
