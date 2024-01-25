@@ -69,7 +69,7 @@ export default function PropertyDetails() {
     };
 
     const handleWhatsAppClick = () => {
-        const phoneNumber = '+923119599700';
+        const phoneNumber = '+923168807850';
         const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
 
         const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -114,7 +114,6 @@ export default function PropertyDetails() {
     const currentImage = images[currentImageIndex];
     return (
         <>
-            <Navbar navClass="defaultscroll sticky" menuClass="navigation-menu nav-left" />
             <section className="section mt-5 pt-4">
                 <div className="container-fluid mt-2">
                     <div className="row g-2">

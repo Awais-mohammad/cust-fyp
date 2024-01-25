@@ -73,7 +73,6 @@ export default function IndexFive(){
 
     return(
         <>
-        <Navbar navClass="defaultscroll sticky" menuClass = "navigation-menu nav-right"/>
         <section className="bg-half-170 d-table w-100 bg-soft-primary">
             <div className="container">
                 <div className="row align-items-center">

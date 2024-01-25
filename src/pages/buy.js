@@ -12,7 +12,6 @@ import Footer from "../components/footer";
 export default function Buy(){
     return(
         <>
-        <Navbar navClass="defaultscroll sticky" logolight={true} menuClass = "navigation-menu nav-left nav-light"/>
         <section className="bg-half-170 d-table w-100" style={{backgroundImage:`url(${bg2})`}}>
             <div className="bg-overlay bg-gradient-overlay-2"></div>
             <div className="container">

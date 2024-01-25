@@ -18,7 +18,6 @@ import CountUp from 'react-countup';
 export default function IndexFour(){
     return(
         <>
-        <Navbar navClass="defaultscroll sticky" menuClass = "navigation-menu"/>
         <section className="position-relative mt-5 pt-4">
             <div className="container-fluid">
                 <div className="row">

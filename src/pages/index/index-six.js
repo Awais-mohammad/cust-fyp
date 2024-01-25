@@ -25,7 +25,6 @@ export default function IndexSix(){
     const [isOpen, setOpen] = useState(false);
     return(
         <>
-        <Navbar navClass="defaultscroll sticky" menuClass = "navigation-menu nav-left"/>
         <section className="position-relative mt-5 pt-4">
             <div className="container-fluid px-lg-5 px-2 mt-2">
                 <div className="bg-half-260 d-table w-100 shadow rounded-3 overflow-hidden" id="home">

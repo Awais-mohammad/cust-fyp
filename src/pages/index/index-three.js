@@ -25,7 +25,7 @@ import Spinner from "../../common/loading-spinner";
 import Blogs from "../blogs";
 
 
-export default function IndexThree() {
+export default function IndexThree({ isSeller }) {
     const [loading, setLoading] = useState(false);
     /*  useEffect(() => {
          const showSpinner = () => {
@@ -38,9 +38,9 @@ export default function IndexThree() {
          return () => clearTimeout();
        }, []);  */
     const [isOpen, setOpen] = useState(false)
+    console.log(isSeller, "ssssssssss")
     return (
         <>
-            <Navbar navClass="defaultscroll sticky" logolight={true} menuClass="navigation-menu nav-left nav-light" />
             <section className="swiper-slider-hero position-relative d-block vh-100" id="home">
                 {loading && <Spinner />}
                 <Carousel infiniteLoop={true} className="vh-100" autoPlay={true} showThumbs={false} showStatus={false}>
@@ -146,7 +146,7 @@ export default function IndexThree() {
                             <h3 className="title mb-1">Featured Properties</h3>
                         </div>
                     </div>
-                    <Blogs onHome={true} />
+                    <Blogs isSeller={isSeller} onHome={true} />
                 </div>
 
                 <div className="container-fluid mt-100 mt-60">

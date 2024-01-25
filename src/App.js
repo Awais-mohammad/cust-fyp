@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Index from "./pages/index";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./assect/scss/style.scss";
@@ -38,8 +38,20 @@ import Maintenance from "./pages/Special/maintenance";
 import Error from "./pages/Special/error";
 import CreateBlog from "./pages/create-blog";
 import RoutesEnums from "./enums/routes.enums";
+import Navbar from "./components/navbar";
+
+const routesWithoutNavbar = [
+  RoutesEnums.LOGIN,
+  RoutesEnums.SIGN_UP,
+  RoutesEnums.RESET_PASSWORD,
+  RoutesEnums.MAINTENANCE,
+  RoutesEnums.ERROR,
+  RoutesEnums.COMING_SOON
+];
 
 function App() {
+  const [isSeller, setIsSeller] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -58,21 +70,18 @@ function App() {
 
   const GUARD_ROUTE = (props) => {
     const { children } = props;
-    const user= ""
-/*     if (
-      user &&
-      (user.type === props.role || props.role === KanzRoles.ALL) &&
-      (user.status === ApplicationStatus.OPENED ||
-        user.status === ApplicationStatus.REOPENED)
-    ) */
-      return <>{children}</>;
-    return ;
+    const user = ""
+    return <>{children}</>;
+    return;
   };
-  
+
   return (
     <>
+      {!routesWithoutNavbar.includes(location.pathname) && (
+        <Navbar isSeller={isSeller} setIsSeller={setIsSeller} navClass="defaultscroll sticky" logolight={true} menuClass="navigation-menu nav-left nav-light" />
+      )}
       <Routes>
-        <Route path= {RoutesEnums.HOME} element={<IndexThree />} />
+        <Route path={RoutesEnums.HOME} element={<IndexThree isSeller={isSeller} />} />
         <Route path={RoutesEnums.IndexTwo} element={<IndexTwo />} />
         <Route path={RoutesEnums.INDEX_THREE} element={<IndexThree />} />
         <Route path={RoutesEnums.INDEX_FOUR} element={<IndexFour />} />
@@ -94,7 +103,7 @@ function App() {
         <Route path={RoutesEnums.FAQS} element={<Faqs />} />
         <Route path={RoutesEnums.TERMS} element={<Terms />} />
         <Route path={RoutesEnums.PRIVACY} element={<Privacy />} />
-        <Route path={RoutesEnums.BLOGS} element={<Blogs />} />
+        <Route path={RoutesEnums.BLOGS} element={<Blogs isSeller={isSeller} />} />
         <Route path={RoutesEnums.BLOG_SIDEBAR} element={<BlogSidebar />} />
         <Route path={RoutesEnums.BLOG} element={<BlogDetail />} />
         <Route path={RoutesEnums.BLOG_DETAIL} element={<BlogDetail />} />

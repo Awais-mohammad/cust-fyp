@@ -79,8 +79,6 @@ export default function IndexSeven(){
     ]
     return(
         <>
-        <Navbar navClass="defaultscroll sticky" menuClass = "navigation-menu"/>
-
         <section className="bg-half-170 d-table w-100 pb-0" style={{backgroundImage:`url(${background})`, backgroundPosition:"bottom"}}>
             <div className="bg-overlay bg-primary-gradient-overlay z-n1"></div>
             <div className="container">

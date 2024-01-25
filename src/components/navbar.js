@@ -263,9 +263,9 @@ export default function Navbar({ navClass, logolight, menuClass, isSeller, setIs
                   <Link to="/features">Insight & Research</Link>
                 </li>
 
-                <li className="has-submenu parent-parent-menu-item">
+                {isSeller && <li className="has-submenu parent-parent-menu-item">
                   <Link to="/blogs">Add Properties</Link>
-                </li>
+                </li>}
 
                 <li className="has-submenu parent-parent-menu-item">
                   <Link to="/aboutus">About Us</Link>
