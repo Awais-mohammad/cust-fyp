@@ -20,6 +20,7 @@ export default function PropertyDetails() {
     const [property, setProperty] = useState({});
     const [coordinates, setCoordinates] = useState(null);
     const [feedback, setFeedback] = useState(null);
+    const [submit, setSubmit] = useState(false);
     const params = useParams()
     const id = params.id;
 
@@ -68,8 +69,8 @@ export default function PropertyDetails() {
         }
     };
 
-    const handleWhatsAppClick = () => {
-        const phoneNumber = '+923168807850';
+    const handleWhatsAppClick = (number) => {
+        const phoneNumber = number;
         const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
 
         const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -100,7 +101,9 @@ export default function PropertyDetails() {
         const prop = await doc(db, "property", id);
         await updateDoc(prop, {
             feedback: feedback,
-        })
+        }).then(
+            setSubmit(true)
+        )
         setFeedback("")
     }
 
@@ -192,7 +195,7 @@ export default function PropertyDetails() {
                                         </label>
                                         <button onClick={() => {
                                             handleFeedback(property)
-                                        }} className="badge bg-primary">Submit</button>
+                                        }} className="badge bg-primary">{submit ? "Feedback Submitted" : "Submit"}</button>
                                     </div>
 
                                     <textarea
@@ -228,12 +231,27 @@ export default function PropertyDetails() {
 
                         <div className="col-lg-4 col-md-5 col-12">
                             <div className="rounded-3 shadow bg-white sticky-bar p-4">
-                                <h5 className="mb-3">Price:</h5>
-
                                 <div className="d-flex align-items-center justify-content-between">
-                                    <h5 className="mb-0">{property?.soldPrice ? property?.soldPrice : "14745"}</h5>
+
+                                    <span></span>
                                     <button className="badge bg-primary">{property?.isSold ? "Sold" : "For Sale"}</button>
                                 </div>
+
+                                <div className="mt-4 d-flex align-items-center justify-content-between">
+                                    <h5 className="mb-3">Asked Price:</h5>
+                                    <h5 className="mb-0">{property?.askedPrice ? property?.askedPrice : "14745"}</h5>
+                                </div>
+
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <h5 className="mb-3">Predicted Price:</h5>
+                                    <h5 className="mb-0">{property?.predictedPrice ? property?.predictedPrice : "14745"}</h5>
+                                </div>
+
+
+                                {property?.salePrice && <div className="d-flex align-items-center justify-content-between">
+                                    <h5 className="mb-3">Sale Price:</h5>
+                                    <h5 className="mb-0">{property?.salePrice ? property?.salePrice : "14745"}</h5>
+                                </div>}
 
                                 <div className="">
                                     <div className="d-flex align-items-center justify-content-between mt-2">
@@ -254,7 +272,7 @@ export default function PropertyDetails() {
 
                                 <div className="d-flex align-items-center justify-content-between mt-3">
                                     <span className="text-muted">Contact Seller :</span>
-                                    <img onClick={handleWhatsAppClick} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />
+                                    <img onClick={()=>{handleWhatsAppClick(property.PhNumber)}} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />
                                 </div>
                             </div>
                         </div>

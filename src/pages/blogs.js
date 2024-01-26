@@ -101,8 +101,8 @@ export default function Blogs({ onHome, isSeller }) {
     );
   }
 
-  const handleWhatsAppClick = () => {
-    const phoneNumber = '+923168807850';
+  const handleWhatsAppClick = (number) => {
+    const phoneNumber = number;
     const message = `Hello, this is a message from ${localStorage.getItem("userName")} from Real Estate Predictor. I am interested in bying your Property.`;
 
     const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -269,7 +269,7 @@ export default function Blogs({ onHome, isSeller }) {
                           View Property{" "}
                           <i className="mdi mdi-chevron-right align-middle"></i>
                         </Link>
-                        {!item.isSold && !isSeller && <img onClick={handleWhatsAppClick} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />}
+                        {!item.isSold && !isSeller && <img onClick={() => { handleWhatsAppClick(item.PhNumber) }} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />}
                         {!item.isSold && item.author === user && isSeller && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
                         {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
                           <input className="rounded" onChange={(e) => {

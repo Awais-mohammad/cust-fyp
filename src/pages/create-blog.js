@@ -23,13 +23,14 @@ import RoutesEnums from "../enums/routes.enums";
 export default function CreateBlog() {
   let navigate = useNavigate()
   const [formData, setFormData] = useState({
-    tag: "",
+    city: "",
     title: "",
     description: "",
     author: "",
     date: "",
     image: "",
     address: "",
+    PhNumber: "",
   });
   const [percent, setPercent] = useState(0);
   const [showPercentBar, setShowPercentBar] = useState(false)
@@ -164,7 +165,7 @@ export default function CreateBlog() {
       event.preventDefault();
       setFormData({
         ...formData,
-        tag: formData.tag.trim() + ",",
+        city: formData.city.trim() + ",",
       });
     }
   };
@@ -178,12 +179,13 @@ export default function CreateBlog() {
       predictedPrice = Math.round(predictedPrice)
 
       const docRef = await addDoc(collection(db, "property"), {
-        tag: formData.tag,
+        city: formData.city,
         beds: formData.beds,
         baths: formData.baths,
         area: formData.area,
         askedPrice: formData.askedPrice,
         address: formData.address,
+        PhNumber: formData.PhNumber,
         predictedPrice: predictedPrice,
         title: formData.title,
         description: descVal,
@@ -294,17 +296,17 @@ export default function CreateBlog() {
                     <div className="col-md-3">
                       <div className="mb-3">
                         <label className="form-label">
-                          Tags <span className="text-danger">*</span>
+                          City <span className="text-danger">*</span>
                         </label>
                         <input
-                          name="tag"
-                          id="blog-tag"
+                          name="city"
+                          id="blog-city"
                           type="text"
                           className="form-control"
-                          placeholder="Tag :"
+                          placeholder="city :"
                           onChange={handleChange}
                           onKeyDown={handleKeyPress}
-                          value={formData.tag}
+                          value={formData.city}
                           required
                         />
                       </div>
@@ -484,6 +486,24 @@ export default function CreateBlog() {
                           placeholder="Address :"
                           onChange={handleChange}
                           value={formData.address}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Seller's Phone Number <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          name="PhNumber"
+                          id="blog-PhNumber"
+                          type="number"
+                          className="form-control"
+                          placeholder="For Example +921112223"
+                          onChange={handleChange}
+                          value={formData.PhNumber}
                           required
                         />
                       </div>
