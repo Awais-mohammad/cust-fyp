@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar";
 import bg3 from "../assect/images/bg/03.jpg";
 import Footer from "../components/footer";
 import whatsappLogo from '../assect/images/WhatsApp.png';
 import {
   collection,
   getDocs,
-  setDoc,
   query,
   deleteDoc,
   orderBy,
@@ -30,6 +28,8 @@ export default function Blogs({ onHome, isSeller }) {
   const [totalBlogs, setTotalBlogs] = useState(0);
   const [selectedPage, setSelectedPage] = useState(1);
   const [salePrice, setSalePrice] = useState();
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
   const user = localStorage.getItem('userName')
 
   let navigate = useNavigate();
@@ -37,6 +37,24 @@ export default function Blogs({ onHome, isSeller }) {
   useEffect(() => {
     getCollectionLength();
   }, []);
+
+  const handleSearch = (value) => {
+    const lowerCaseSearchInput = value?.toLowerCase();
+    setSearchInput(lowerCaseSearchInput)
+    console.log("sdfdsf",lowerCaseSearchInput);
+
+    if (lowerCaseSearchInput.trim() === "") {
+      setCurrentPageData(allData.slice(0, pageSize));
+      setTotalBlogs(allData.length);
+    } else {
+      const filteredItems = allData?.filter(item =>
+        item?.city?.toLowerCase()?.includes(lowerCaseSearchInput)
+      );
+      setFilteredData(filteredItems);
+      setCurrentPageData(filteredItems?.slice(0, pageSize));
+      setTotalBlogs(filteredItems?.length);
+    }
+  };
 
   const getCollectionLength = async () => {
     setLoading(true)
@@ -212,8 +230,143 @@ export default function Blogs({ onHome, isSeller }) {
           </button>}
         </div>
       )}
+
       <section className="section">
         <div className="container">
+          {!onHome && <div className="row mb-5 d-flex justify-content-center">
+            <div className="col-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search Property..."
+                  value={searchInput}
+                  onChange={(e) => {
+                    handleSearch(e.target.value)
+                  }}
+                />
+            </div>
+          </div>}
+          <div className="row g-4">
+            {currentPageData.map((item, index) => {
+              return (
+                <div className="col-lg-4 col-md-6 col-12" key={index}>
+                  <div className="card property border-0 shadow position-relative overflow-hidden rounded-3">
+                    <div className="property-image position-relative overflow-hidden shadow">
+                      <img src={item.images[0]} className="img-fluid" alt="" />
+                      <ul className="list-unstyled property-icon">
+                        <li onClick={() => handleDelete(item.id)} className=""><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiDelete className="icons" /></Link></li>
+                        <li className="mt-1"><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiHeart className="icons" /></Link></li>
+                        <li className="mt-1"><Link to="#" className="btn btn-sm btn-icon btn-pills btn-primary"><FiCamera className="icons" /></Link></li>
+                      </ul>
+                    </div>
+                    <div className="card-body content p-4">
+                      <Link to={`/property-detail/${item.id}`} className="title fs-5 text-dark fw-medium">{item.title}</Link>
+
+                      <ul className="list-unstyled mt-3 py-3 border-top border-bottom d-flex align-items-center justify-content-between">
+                        <li className="d-flex align-items-center me-3">
+                          <i className="mdi mdi-arrow-expand-all fs-5 me-2 text-primary"></i>
+                          <span className="text-muted">{item.area} sqf</span>
+                        </li>
+
+                        <li className="d-flex align-items-center me-3">
+                          <i className="mdi mdi-bed fs-5 me-2 text-primary"></i>
+                          <span className="text-muted">{item.beds} Beds</span>
+                        </li>
+
+                        <li className="d-flex align-items-center">
+                          <i className="mdi mdi-shower fs-5 me-2 text-primary"></i>
+                          <span className="text-muted">{item.baths} Baths</span>
+                        </li>
+                      </ul>
+                      <ul className="list-unstyled d-flex justify-content-between mt-2 mb-0">
+                        <li className="list-inline-item mb-0">
+                          <span className="text-muted">Asked Price</span>
+                          <p className="fw-medium mb-0">{item.askedPrice} PKR</p>
+                        </li>
+                        {item.salePrice && <li className="list-inline-item mb-0">
+                          <span className="text-muted">Sold Price</span>
+                          <p className="fw-medium mb-0">{item.salePrice} PKR</p>
+                        </li>}
+                        <li className="list-inline-item mb-0">
+                          <span className="text-muted">Predicted Price</span>
+                          <p className="fw-medium mb-0">{item.predictedPrice} PKR</p>
+                        </li>
+                      </ul>
+                      <div className="mt-4 d-flex justify-content-between">
+                        <Link
+                          to={`/property-detail/${item.id}`}
+                          className="text-dark read-more"
+                        >
+                          View Property{" "}
+                          <i className="mdi mdi-chevron-right align-middle"></i>
+                        </Link>
+                        {!item.isSold && !isSeller && <img onClick={() => { handleWhatsAppClick(item.PhNumber) }} style={{ width: '60px', cursor: 'pointer' }} src={whatsappLogo} alt="WhatsApp Logo" />}
+                        {!item.isSold && item.author === user && isSeller && <button onClick={() => { handleSold(item) }} className="badge bg-primary">Mark as Sold</button>}
+                        {item.isSold && !item.salePrice && <div className="d-flex flex-column" style={{ width: "45%" }}>
+                          <input className="rounded" onChange={(e) => {
+                            setSalePrice(e.target.value)
+                          }} placeholder="Enter sale price" />
+                          <button
+                            onClick={() => {
+                              handleSale(item);
+                            }}
+                            className="badge bg-primary mt-2 align-self-end"
+                            style={{ width: "40%" }}
+                          >Sell</button>
+                        </div>}
+                        {item.isSold && item.salePrice && <button className="badge bg-primary">Sold</button>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {!onHome && (
+            <div className="row">
+              <div className="col-12 mt-4 pt-2">
+                <ul className="pagination justify-content-center mb-0">
+                  <li className="page-item">
+                    <Link className="page-link" to="#" aria-label="Previous">
+                      <span aria-hidden="true">
+                        <i className="mdi mdi-chevron-left fs-6"></i>
+                      </span>
+                    </Link>
+                  </li>
+
+                  {renderPaginationLinks()}
+
+                  <li className="page-item">
+                    <Link className="page-link" to="#" aria-label="Next">
+                      <span aria-hidden="true">
+                        <i className="mdi mdi-chevron-right fs-6"></i>
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* <section className="section">
+        <div className="container">
+          <div className="row mb-5">
+            <div className="col-6 ms-auto">
+              <div className="input-group d-flex align-items-center">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search Property..."
+                />
+                <button type="button" className="btn btn-md btn-icon btn-pills btn-primary">
+                  <FiSearch className="icons" />
+                </button>
+              </div>
+            </div>
+          </div>
           <div className="row g-4">
             {currentPageData.map((item, index) => {
 
@@ -316,7 +469,7 @@ export default function Blogs({ onHome, isSeller }) {
             </div>
           </div>}
         </div>
-      </section>
+      </section> */}
       {!onHome && <Footer />}
     </>
   );

@@ -210,46 +210,6 @@ export default function Navbar({ navClass, logolight, menuClass, isSeller, setIs
                 </li>
               }
               <li className="list-inline-item ps-1 mb-0">
-                <div className="dropdown">
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-icon btn-pills btn-primary dropdown-toggle"
-                    onClick={() => setModal(!modal)}
-                  >
-                    <FiSearch className="icons" />
-                  </button>
-                  <div
-                    className={`${modal === true ? "show" : ""
-                      } dropdown-menu dd-menu dropdown-menu-start bg-white rounded-3 border-0 mt-3 p-0 right-0`}
-                    style={{ width: "240px", right: "0" }}
-                  >
-                    <div className="search-bar">
-                      <div id="itemSearch" className="menu-search mb-0">
-                        <form
-                          role="search"
-                          method="get"
-                          id="searchItemform"
-                          className="searchform"
-                        >
-                          <input
-                            type="text"
-                            className="form-control rounded-3 border"
-                            name="s"
-                            id="searchItem"
-                            placeholder="Search..."
-                          />
-                          <input
-                            type="submit"
-                            id="searchItemsubmit"
-                            value="Search"
-                          />
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li className="list-inline-item ps-1 mb-0">
                 {iconCheckLoggedIn()}
               </li>
             </ul>
